@@ -2,7 +2,11 @@
   "name": "yap-middle-frontend-one",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "targets": {
+    "defaults": {
+      "distDir": "./dist"
+    }
+  },
   "scripts": {
     "dev": "parcel -p 3000 public/index.hbs",
     "build": "parcel build public/index.hbs"

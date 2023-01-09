@@ -16,10 +16,11 @@ node_modules
 /coverage
 
 # production
-/src/build
-/src/dist
+/build
+/dist
 
 # misc
+.parcel-cache
 .git
 .DS_Store
 .env
