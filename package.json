@@ -1,0 +1,17 @@
+{
+  "name": "yap-middle-frontend-one",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel -p 3000 public/index.hbs",
+    "build": "parcel build public/index.hbs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@anikin/parcel-transformer-handlebars": "^1.0.9",
+    "parcel": "^2.8.2"
+  }
+}
