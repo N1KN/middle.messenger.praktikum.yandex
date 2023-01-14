@@ -1,6 +1,8 @@
 {
   "extends": "@parcel/config-default",
+  "resolvers": ["parcel-resolver-ts-base-url", "..."],
   "transformers": {
-    "*.hbs": ["@anikin/parcel-transformer-handlebars"]
+    "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"],
+    "*.{css,pcss}": ["@parcel/transformer-postcss", "@parcel/transformer-css"],
   }
 }
