@@ -13,6 +13,14 @@
     "build": "parcel build src/index.html --open",
     "check": "tsc --noEmit"
   },
+  "alias": {
+    "components": "./src/components",
+    "containers": "./src/containers",
+    "pages": "./src/pages",
+    "types": "./src/types",
+    "vendor": "./src/vendor",
+    "utils": "./src/utils"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
