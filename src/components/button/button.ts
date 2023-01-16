@@ -1,16 +1,24 @@
 import Handlebars from 'handlebars';
-import { buttonTemplate, ButtonTemplateProps, buttonTemplateWithId } from 'components/button/tpl.hbs';
-import 'components/button/styles.css';
+import { cn } from 'utils/bem';
+
+import './styles.pcss';
+
 
 type ButtonProps = {
+    className?: string;
     id?: string;
-    value: string
+    text: string
 }
 
-export const Button = ({id, value}: ButtonProps) => {
-    if (id) {
-        return Handlebars.compile<ButtonTemplateProps>(buttonTemplate)({ id, value });
-    }
+const cnButton = cn('Button');
 
-    return Handlebars.compile<Omit<ButtonTemplateProps, 'id'>>(buttonTemplateWithId)({ value });
+export const Button = ({id, text }: ButtonProps) => {
+    const idAttr = id ? `id="${id}"` : '';
+
+    const template = `
+        <button ${idAttr} class="${cnButton()}">
+        ${text}
+        </button>`;
+
+    return Handlebars.compile(template)({});
 }

@@ -2,7 +2,7 @@ import Handlebars from 'handlebars';
 import { LinkButton } from 'components/link-button';
 import { getUrlByRoute, RouteNames } from 'utils/router';
 import { NotFoundPageProps, notFoundPageTemplate } from './not-found.tpl';
-import 'pages/not-found/styles.css';
+import './styles.pcss';
 
 const chatsLink = getUrlByRoute(RouteNames.CHATS);
 

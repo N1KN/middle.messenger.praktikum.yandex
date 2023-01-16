@@ -1,6 +1,8 @@
 import { cn } from 'utils/bem';
 import { GetTemplateProps } from 'types/common';
 
+import './styles.pcss';
+
 const templateProps = {
     additionalClassName: '{{additionalClassName}}',
     url: '{{url}}',

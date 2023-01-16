@@ -1,39 +1,50 @@
 import { AppContainer } from 'containers/app';
-import { getHashUrlFromUrl } from 'utils/common';
-import { getRouteByUrl, RouteNames } from 'utils/router';
+import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
 import { NotFoundPage } from 'pages/not-found';
+import { InternalErrorPage } from 'pages/internal-error';
+import { SignInPage } from 'pages/sign-in/sign-in';
+import { SignUpPage } from 'pages/sign-up/sign-up';
+
 import './styles.css';
+
+
+
 type PageFunction = (...props: any[]) => string;
 
 (() => {
-    const getPageByUrl = (url: string): PageFunction => {
+    const getPageByRouteName = (routeName: RouteNames): PageFunction => {
         const PAGES: Record<RouteNames, PageFunction> = {
-            [RouteNames.SIGN_IN]: () => '',
-            [RouteNames.REGISTER]: () => '',
-            [RouteNames.ACCOUNT]: () => '',
-            [RouteNames.ACCOUNT_EDIT]: () => '',
-            [RouteNames.CHANGE_PASSWORD]: () => '',
-            [RouteNames.CHATS]: () => '',
+            [RouteNames.SIGN_IN]: SignInPage,
+            [RouteNames.SIGN_UP]: SignUpPage,
+            [RouteNames.ACCOUNT]: () => 'WIP',
+            [RouteNames.ACCOUNT_EDIT]: () => 'WIP',
+            [RouteNames.CHANGE_PASSWORD]: () => 'WIP',
+            [RouteNames.CHATS]: () => 'WIP',
             [RouteNames.NOT_FOUND]: NotFoundPage,
-            [RouteNames.INTERNAL_ERROR]: () => '',
+            [RouteNames.INTERNAL_ERROR]: InternalErrorPage,
         }
 
-        const ROUTE = getRouteByUrl(url);
-        console.log('getPageByUrl', ROUTE)
-
-        return PAGES[getRouteByUrl(url)];
+        return PAGES[routeName];
     }
 
     const rootElement = document.querySelector('#root');
-    const initialUrl = getHashUrlFromUrl(document.location.href);
+    const initialUrl = document.location.href;
 
     const renderPage = (url: string) => {
+        const routeName = getRouteByUrlOrNotFoundRoute(url);
+
+        // Редирект на страницу ошибки.
+        if (!routeName) {
+            location.hash = getUrlByRoute(RouteNames.NOT_FOUND);
+            return;
+        }
+
         if (!rootElement) {
             throw new Error(`Root element is not found`);
         }
 
         rootElement.innerHTML = AppContainer({
-            page: getPageByUrl(url)(),
+            page: getPageByRouteName(routeName)(),
         });
     };
 
@@ -43,4 +54,14 @@ type PageFunction = (...props: any[]) => string;
 
     document.addEventListener('DOMContentLoaded', () => renderPage(initialUrl), { once: true });
     window.addEventListener('hashchange', handleRouting);
+})();
+
+(() => {
+    // Перехватываем и отключаем все события отправки(до следующего спринта)
+    // TODO: Реализовать обработку событий отправки форм.
+    document.addEventListener('submit', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+    });
 })();

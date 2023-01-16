@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import { AppContainerTemplate, AppContainerTemplateProps } from './app.tpl';
-import './styles.css';
+import './styles.pcss';
 
 type AppContainerProps = {
     page: string;

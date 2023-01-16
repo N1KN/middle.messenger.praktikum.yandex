@@ -1,0 +1,67 @@
+.TextField {
+    position: relative;
+
+    &-inputWrapper {
+        cursor: text;
+    }
+
+    &-input {
+        width: 100%;
+        padding-bottom: 7px;
+        margin-bottom: 7px;
+        border: none;
+        border-bottom: 1px solid var(--color-bg-normal);
+        outline: none;
+
+        background-color: transparent;
+        color: var(--text-primary-color);
+        font-weight: 500;
+        line-height: 13px;
+        font-size: 13px;
+
+        /*&:valid + .TextField_title {
+            top: -8px;
+        }*/
+
+        &:focus + .TextField-title, &:not(:placeholder-shown) + .TextField-title {
+            top: -12px !important;
+            font-size: 9px;
+            line-height: 9px;
+        }
+    }
+
+    &-title {
+        position: absolute;
+        width: 100%;
+        top: 6px;
+        left: 0;
+
+        color: var(--text-secondary-color);
+
+        font-size: 13px;
+        line-height: 13px;
+        font-weight: 500;
+
+        transition: 0.3s font-size, top 0.3s;
+
+        &_hasValue {
+            top: -12px !important;
+            font-size: 9px;
+            line-height: 9px;
+        }
+    }
+
+    &-error {
+        margin: 0;
+        min-height: 8px;
+        font-size: 8px;
+        color: var(--text-error-color);
+        font-weight: 400;
+        line-height: 8px;
+        opacity: 0;
+
+        &-show {
+            opacity: 1;
+        }
+    }
+}

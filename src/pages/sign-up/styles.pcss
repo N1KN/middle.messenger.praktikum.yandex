@@ -1,0 +1,46 @@
+.SignInPage {
+    display: flex;
+    font-family: inherit;
+    box-sizing: border-box;
+    max-width: 340px;
+    height: 460px;
+    width: 100%;
+    padding: 50px 30px 30px;
+    flex-direction: column;
+    box-shadow: var(--block-shadow);
+    border-radius: 12px;
+
+    &-form {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        gap: 40px;
+        margin-block: 0;
+    }
+
+    &-title {
+        font-size: 20px;
+        color: var(--text-primary-color);
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 0;
+        text-align: center;
+    }
+
+    &-body {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+    }
+
+    &-buttons {
+        display: flex;
+        flex-grow: 1;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 14px
+    }
+
+}

@@ -1,7 +1,6 @@
-import { getHashUrlFromUrl } from 'utils/common';
 export enum RouteNames {
     SIGN_IN = 'sign-in',
-    REGISTER = 'register',
+    SIGN_UP = 'sign-up',
     ACCOUNT = 'account',
     ACCOUNT_EDIT = 'account-edit',
     CHANGE_PASSWORD = 'change-password',
@@ -10,9 +9,9 @@ export enum RouteNames {
     INTERNAL_ERROR = 'internal-error',
 }
 
-export const paths: Record<RouteNames, string> = {
+export const SITE_PATHS: Record<RouteNames, string> = {
     [RouteNames.SIGN_IN]: 'sign-in',
-    [RouteNames.REGISTER]: 'register',
+    [RouteNames.SIGN_UP]: 'sign-up',
     [RouteNames.ACCOUNT]: 'account',
     [RouteNames.ACCOUNT_EDIT]: 'account-edit',
     [RouteNames.CHANGE_PASSWORD]: 'change-password',
@@ -21,15 +20,32 @@ export const paths: Record<RouteNames, string> = {
     [RouteNames.INTERNAL_ERROR]: 'internal-error',
 } as const;
 
-export const getUrlByRoute = (route: RouteNames): string => {
-    return `/#/${paths[route]}`
+export const getUrlByRoute = (route: RouteNames, withFirstSlash?: boolean): string => {
+    return `${withFirstSlash ? '/' : ''}#/${SITE_PATHS[route]}`
 }
 
-export const getRouteByUrl = (url: string): RouteNames => {
-    // Очищаем url от части "/#/"
+export const getHashUrlFromUrl = (url: string): string => {
+    try {
+        const urlObj = new URL(url);
+
+        // Очищаем hash url от #
+        return urlObj.hash.slice(1);
+    } catch (e) {
+        return '';
+    }
+};
+
+export function getRouteByUrlOrNotFoundRoute(url: string, notFoundRoteByDefault: true): RouteNames;
+export function getRouteByUrlOrNotFoundRoute(url: string, notFoundRoteByDefault?: false): RouteNames | undefined;
+export function getRouteByUrlOrNotFoundRoute(url: string, notFoundRoteByDefault: boolean = false): RouteNames | undefined {
+    // Очищаем url от части "#/"
     const clearUrl = getHashUrlFromUrl(url).slice(1);
 
-    const routeName = (Object.entries(paths) as [RouteNames, string][]).find(([id, path]) => path === clearUrl);
+    const routeName = (Object.entries(SITE_PATHS) as [RouteNames, string][]).find(([_, path]) => path === clearUrl);
 
-    return routeName?.[0] ?? RouteNames.NOT_FOUND;
+    if (notFoundRoteByDefault) {
+        return routeName?.[0] ?? RouteNames.NOT_FOUND;
+    }
+
+    return routeName?.[0];
 }
