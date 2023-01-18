@@ -1,1 +1,1 @@
-export * from 'pages/internal-error/internal-error';
+export * from './internal-error';

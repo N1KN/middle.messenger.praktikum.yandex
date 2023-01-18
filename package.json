@@ -9,7 +9,7 @@
     }
   },
   "scripts": {
-    "dev": "parcel -p 3000 src/index.html --open --target default",
+    "dev": "parcel -p 1234 src/index.html --open --target default",
     "build": "parcel build src/index.html --open",
     "check": "tsc --noEmit"
   },
@@ -17,6 +17,7 @@
     "components": "./src/components",
     "containers": "./src/containers",
     "pages": "./src/pages",
+    "static": "./src/static",
     "types": "./src/types",
     "vendor": "./src/vendor",
     "utils": "./src/utils"
