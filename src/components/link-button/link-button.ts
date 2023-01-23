@@ -1,6 +1,6 @@
 import Handlebars from 'handlebars';
 import { linkButtonTemplate, LinkButtonTemplateProps } from './link-button.tpl';
-import 'components/link-button/styles.pcss';
+import './styles.pcss';
 
 
 type LinkButtonProps = {

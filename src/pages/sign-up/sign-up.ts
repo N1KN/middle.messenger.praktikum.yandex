@@ -21,8 +21,8 @@ export const SignUpPage = () => {
             <div class="${cnSignUpPage('body')}">
                 {{{mailInput}}}
                 {{{loginInput}}}
-                {{{firstnameInput}}}
-                {{{surnameInput}}}
+                {{{firstNameInput}}}
+                {{{secondNameInput}}}
                 {{{phoneInput}}}
                 {{{passwordInput}}}
                 {{{repeatPasswordInput}}}
@@ -37,19 +37,20 @@ export const SignUpPage = () => {
     return Handlebars.compile(template)({
         mailInput: TextField({
             title: 'Почта',
-            name: 'mail',
+            type: 'email',
+            name: 'email',
         }),
         loginInput: TextField({
             title: 'Логин',
             name: 'login',
         }),
-        firstnameInput: TextField({
+        firstNameInput: TextField({
             title: 'Имя',
-            name: 'firstname',
+            name: 'first_name',
         }),
-        surnameInput: TextField({
+        secondNameInput: TextField({
             title: 'Фамилия',
-            name: 'surname',
+            name: 'second_name',
         }),
         phoneInput: TextField({
             title: 'Телефон',
@@ -63,7 +64,7 @@ export const SignUpPage = () => {
         }),
         repeatPasswordInput: TextField({
             title: 'Пароль (ещё раз)',
-            name: 'repeatPassword',
+            name: 'repeat_password',
             type: 'password',
         }),
         regButton: Button({

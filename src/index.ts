@@ -4,8 +4,11 @@ import { NotFoundPage } from 'pages/not-found';
 import { InternalErrorPage } from 'pages/internal-error';
 import { SignInPage } from 'pages/sign-in';
 import { SignUpPage } from 'pages/sign-up';
-import { AccountPage } from 'pages/account';
-import './styles.css';
+import { getAccountPageRender } from 'pages/account';
+import { ChatsPage } from 'pages/chats';
+import { ChangePassword } from 'pages/change-password';
+
+import './styles.pcss';
 
 type PageFunction = (...props: any[]) => string;
 
@@ -14,10 +17,10 @@ type PageFunction = (...props: any[]) => string;
         const PAGES: Record<RouteNames, PageFunction> = {
             [RouteNames.SIGN_IN]: SignInPage,
             [RouteNames.SIGN_UP]: SignUpPage,
-            [RouteNames.ACCOUNT]: AccountPage,
-            [RouteNames.ACCOUNT_EDIT]: () => 'WIP',
-            [RouteNames.CHANGE_PASSWORD]: () => 'WIP',
-            [RouteNames.CHATS]: () => 'WIP',
+            [RouteNames.ACCOUNT]: getAccountPageRender(),
+            [RouteNames.ACCOUNT_EDIT]: getAccountPageRender({ isEditMode: true }),
+            [RouteNames.CHANGE_PASSWORD]: ChangePassword,
+            [RouteNames.CHATS]: ChatsPage,
             [RouteNames.NOT_FOUND]: NotFoundPage,
             [RouteNames.INTERNAL_ERROR]: InternalErrorPage,
         }

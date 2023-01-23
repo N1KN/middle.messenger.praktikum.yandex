@@ -5,12 +5,22 @@
         cursor: text;
     }
 
+    &_mode_profile &-input {
+        text-align: right;
+        color: var(--text-secondary-color) !important;
+        border-bottom-color: var(--color-bg-border);
+    }
+
+    &_mode_profile &-title {
+        color: var(--text-primary-color) !important;
+    }
+
     &-input {
         width: 100%;
         padding-bottom: 7px;
         margin-bottom: 7px;
         border: none;
-        border-bottom: 1px solid var(--color-bg-normal);
+        border-bottom: 1px solid var(--color-bg-blue);
         outline: none;
 
         background-color: transparent;
@@ -19,12 +29,8 @@
         line-height: 13px;
         font-size: 13px;
 
-        /*&:valid + .TextField_title {
-            top: -8px;
-        }*/
-
-        &:focus + .TextField-title, &:not(:placeholder-shown) + .TextField-title {
-            top: -12px !important;
+        .TextField_mode_default &:focus + .TextField-title, .TextField_mode_default &:not(:placeholder-shown) + .TextField-title {
+            top: -12px;
             font-size: 9px;
             line-height: 9px;
         }
@@ -43,15 +49,11 @@
         font-weight: 500;
 
         transition: 0.3s font-size, top 0.3s;
-
-        &_hasValue {
-            top: -12px !important;
-            font-size: 9px;
-            line-height: 9px;
-        }
     }
 
     &-error {
+        /* Отключил пока не используется */
+        display: none;
         margin: 0;
         min-height: 8px;
         font-size: 8px;

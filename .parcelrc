@@ -1,6 +1,5 @@
 {
-  "extends": "@parcel/config-default",
-  "resolvers": ["parcel-resolver-ts-base-url", "..."],
+  "extends": ["@parcel/config-default"],
   "transformers": {
     "*.{css,pcss}": ["@parcel/transformer-postcss", "@parcel/transformer-css"],
   }

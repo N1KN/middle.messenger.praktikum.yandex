@@ -1,5 +1,7 @@
 import Handlebars from 'handlebars';
 import { Button } from 'components/button';
+import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
+import { Divider } from 'components/divider';
 import { TextField } from 'components/text-field';
 import { LinkButton } from 'components/link-button';
 import { getUrlByRoute, RouteNames } from 'utils/router';
@@ -7,82 +9,127 @@ import { cn } from 'utils/bem';
 
 import './styles.pcss';
 
+type AccountPageProps = {
+    isEditMode?: boolean;
+};
+
+const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
+
 const cnAccountPage = cn('AccountPage');
+const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT_EDIT);
+const accountChangePasswordLink = getUrlByRoute(RouteNames.CHANGE_PASSWORD);
+const accountExitLink = getUrlByRoute(RouteNames.SIGN_IN);
+const accountLink = getUrlByRoute(RouteNames.ACCOUNT);
+const chatsLink = getUrlByRoute(RouteNames.CHATS);
 
-const signUpLink = getUrlByRoute(RouteNames.SIGN_UP);
+export const getAccountPageRender = ({ isEditMode } : AccountPageProps = {}) => () => {
+    const textFieldCfg = { mode: 'profile', isDisabled: !isEditMode } as const;
+    let footerContent;
+    let footerButtons: Record<string, string>;
 
-export const AccountPage = () => {
+    if (isEditMode) {
+        footerContent = `
+            {{{accountSaveButton}}}`;
+
+        footerButtons = {
+            accountSaveButton: Button({
+                id: 'saveAccount',
+                text: 'Сохранить',
+            })
+        };
+    } else {
+        footerContent = `
+            {{{accountEditButton}}}
+            {{{divider}}}
+            {{{accountChangePasswordButton}}}
+            {{{divider}}}
+            {{{accountExitButton}}}`;
+        footerButtons = {
+            accountEditButton: LinkButton({
+                className: cnAccountPage('linkButton'),
+                text: 'Изменить данные',
+                url: accountEditLink
+            }),
+            accountChangePasswordButton: LinkButton({
+                className: cnAccountPage('linkButton'),
+                text: 'Изменить пароль',
+                url: accountChangePasswordLink
+            }),
+            accountExitButton: LinkButton({
+                className: cnAccountPage('linkButton', { isExit: true }),
+                text: 'Выйти',
+                url: accountExitLink
+            }),
+            divider: Divider({
+                className: cnAccountPage('divider')
+            })
+        };
+    }
 
     const template = `
-    <div class="${cnAccountPage()}">
-        <a class="${cnAccountPage('backButtonWrapper')}">
-            <div class="${cnAccountPage('backButton')}"></div>
-        </a>
-        <div class="${cnAccountPage('formWrapper')}">
-            <form class="${cnAccountPage('form')}">
-                <div class="edit-avatar">
-                <img class="edit-avatar__img" src="/src/static/img/avatar.svg" alt="Аватар по умолчанию">
-                <span class="edit-avatar__span">Поменять аватар</span>
+        <form class="${cnAccountPage()}">
+            <div class="${cnAccountPage('headerContent')}">
+                <div class="${cnAccountPage('changeAvatar')}">
+                    <img src="${avatarUrl}" alt="Аватар по умолчанию" />
+                    <div class="${cnAccountPage('changeAvatarText')}">Поменять аватар</div>
                 </div>
-                <p class="${cnAccountPage('userName')}">Login</p>
-                <div class="${cnAccountPage('textFieldsWrapper')}">
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="email" value="ma@il.ru" name="email"> <span class="${cnAccountPage('inputBlock')}__span">Почта</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="text" value="Login" name="login"> <span class="${cnAccountPage('inputBlock')}__span">Логин</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="text" value="Login" name="name" > <span class="${cnAccountPage('inputBlock')}__span">Имя</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="text" value="Login" name="surname" > <span class="${cnAccountPage('inputBlock')}__span">Фамилия</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="text" value="Login" name="nick" > <span class="${cnAccountPage('inputBlock')}__span">Имя в чате</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                    <div class="${cnAccountPage('inputBlock')}">
-                        <input class="input-profile" type="tel" value="+79876543210" name="phone" > <span class="${cnAccountPage('inputBlock')}__span">Телефон</span> <span class="${cnAccountPage('inputBlock')}__error"></span> </label>
-                    </div>
-                </div>
-                <div class="${cnAccountPage('bottom')}">
-                    <div class="btn-profile">Изменить данные</div>
-                    <div class="btn-profile">Изменить пароль</div>
-                    <div class="btn-profile">Выйти</div>
-                </div>
-            </form>
-            <!--<form class="${cnAccountPage('form')}">
-                <div class="${cnAccountPage('title')}">Вход</div>
-                <div class="${cnAccountPage('body')}">
-                    {{{loginInput}}}
-                    {{{passwordInput}}}
-                    <div class="${cnAccountPage('buttons')}">
-                        {{{authButton}}}
-                        {{{signUpLink}}}
-                    </div>
-                </div>
-            </form> -->
-        </div>
-    </div>`;
+                <p class="${cnAccountPage('userName', { isEditMode })}">Login</p>
+            </div>
+    
+            <div class="${cnAccountPage('bodyContent')}">
+                {{{mailInput}}}
+                {{{loginInput}}}
+                {{{firstNameInput}}}
+                {{{secondNameInput}}}
+                {{{displayNameInput}}}
+                {{{phoneInput}}}
+            </div>
+            <div class="${cnAccountPage('footerContent')}">
+                ${footerContent}
+            </div>
+        </form>`;
 
-    return Handlebars.compile(template)({
+    const pageContent = Handlebars.compile(template)({
+        mailInput: TextField({
+            ...textFieldCfg,
+            title: 'Почта',
+            name: 'email',
+            type: 'email'
+        }),
         loginInput: TextField({
+            ...textFieldCfg,
             title: 'Логин',
             name: 'login',
         }),
-        passwordInput: TextField({
-            title: 'Пароль',
-            name: 'password',
-            type: 'password',
+        firstNameInput: TextField({
+            ...textFieldCfg,
+            title: 'Имя',
+            name: 'first_name',
         }),
-        authButton: Button({
-            id: 'authButton',
-            text: 'Авторизация'
+        secondNameInput: TextField({
+            ...textFieldCfg,
+            title: 'Фамилия',
+            name: 'second_name',
         }),
-        signUpLink: LinkButton({
-            text: 'Нет аккаунта?',
-            url: signUpLink
+        phoneInput: TextField({
+            ...textFieldCfg,
+            title: 'Телефон',
+            name: 'phone',
+            type: 'tel',
         }),
+        displayNameInput: TextField({
+            ...textFieldCfg,
+            title: 'Имя в чате',
+            name: 'display_name',
+            type: 'tel',
+        }),
+
+        ...footerButtons,
+    });
+
+    return PageWrapperWithBackButton({
+        pageContent,
+        backBtnUrl: isEditMode ? accountLink : chatsLink,
     });
 };
 
