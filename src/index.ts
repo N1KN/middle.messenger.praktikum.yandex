@@ -99,8 +99,11 @@ type PageFunction = (...props: any[]) => string;
                 location.hash = getUrlByRoute(RouteNames.ACCOUNT);
             }
 
-
-
+            //TODO: После подключения авторизации и событий убрать.
+            // Переходим в данные об аккаунте
+            if (e.target.getAttribute('id') === 'savePasswordButton') {
+                location.hash = getUrlByRoute(RouteNames.ACCOUNT);
+            }
             e.stopPropagation();
             return false;
         }

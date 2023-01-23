@@ -54,7 +54,7 @@ export const ChangePassword = () => {
         }),
 
         passwordSaveButton: Button({
-            id: 'savePassword',
+            id: 'savePasswordButton',
             text: 'Сохранить',
         })
     });
