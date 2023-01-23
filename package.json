@@ -20,7 +20,6 @@
     "pages": "./src/pages",
     "static": "./src/static",
     "types": "./src/types",
-    "vendor": "./src/vendor",
     "utils": "./src/utils"
   },
   "keywords": [],
