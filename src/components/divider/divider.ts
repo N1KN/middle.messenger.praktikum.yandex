@@ -1,3 +1,4 @@
+import Handlebars from 'handlebars';
 import { cn } from 'utils/bem';
 
 type DividerProps = {

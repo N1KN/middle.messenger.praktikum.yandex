@@ -1,5 +1,5 @@
 import { AppContainer } from 'containers/app';
-import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
+import { getHashUrlFromUrl, getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
 import { NotFoundPage } from 'pages/not-found';
 import { InternalErrorPage } from 'pages/internal-error';
 import { SignInPage } from 'pages/sign-in';
@@ -32,7 +32,15 @@ type PageFunction = (...props: any[]) => string;
     const initialUrl = document.location.href;
 
     const renderPage = (url: string) => {
+        const isRoot = getHashUrlFromUrl(url) === '/';
+
         const routeName = getRouteByUrlOrNotFoundRoute(url);
+
+        // Редирект на страницу входа.
+        if (isRoot) {
+            location.hash = getUrlByRoute(RouteNames.SIGN_IN);
+            return;
+        }
 
         // Редирект на страницу ошибки.
         if (!routeName) {
@@ -58,11 +66,45 @@ type PageFunction = (...props: any[]) => string;
 })();
 
 (() => {
+    const isEl = function <T>(el: T): el is T & Omit<Element, 'attributes'> {
+        return (el as Element)?.attributes !== undefined;
+    }
+
     // Перехватываем и отключаем все события отправки(до следующего спринта)
     // TODO: Реализовать обработку событий отправки форм.
     document.addEventListener('submit', (e) => {
         e.stopPropagation();
         e.preventDefault();
+        return false;
+    });
+
+    document.addEventListener('click', (e) => {
+        if (isEl(e.target)) {
+
+            //TODO: После подключения авторизации и событий убрать.
+            // Переходим в чаты
+            if (e.target.getAttribute('id') === 'authButton') {
+                location.hash = getUrlByRoute(RouteNames.CHATS);
+            }
+
+            //TODO: После подключения авторизации и событий убрать.
+            // Переходим в чаты
+            if (e.target.getAttribute('id') === 'regButton') {
+                location.hash = getUrlByRoute(RouteNames.CHATS);
+            }
+
+            //TODO: После подключения авторизации и событий убрать.
+            // Переходим в данные об аккаунте
+            if (e.target.getAttribute('id') === 'saveAccountButton') {
+                location.hash = getUrlByRoute(RouteNames.ACCOUNT);
+            }
+
+
+
+            e.stopPropagation();
+            return false;
+        }
+
         return false;
     });
 })();

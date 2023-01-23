@@ -33,7 +33,7 @@ export const getAccountPageRender = ({ isEditMode } : AccountPageProps = {}) => 
 
         footerButtons = {
             accountSaveButton: Button({
-                id: 'saveAccount',
+                id: 'saveAccountButton',
                 text: 'Сохранить',
             })
         };
