@@ -1,5 +1,5 @@
-import { cn } from 'utils/bem';
 import Handlebars from 'handlebars';
+import { cn } from 'utils/bem';
 
 import './styles.pcss';
 
@@ -25,7 +25,7 @@ export const ChatListItem = (props: cnChatListItemProps) => {
     </p>`;
 
   const template = `
-    <div class="${cnChatListItem('', { isActive },[className])}" data-chat-id="{{chatId}}">
+    <div class="${cnChatListItem('', { isActive }, [className])}" data-chat-id="{{chatId}}">
         <!--div class="list-item__container"-->
             <div class="${cnChatListItem('avatar')}"></div>
             <div class="${cnChatListItem('body')}">
@@ -48,4 +48,4 @@ export const ChatListItem = (props: cnChatListItemProps) => {
     lastMsgTime: lastMsgTime ?? '',
     unreadCount: unreadCount ?? '',
   });
-}
+};

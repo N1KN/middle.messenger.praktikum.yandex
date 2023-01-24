@@ -1,13 +1,13 @@
 import { AppContainer } from 'containers/app';
-import { getHashUrlFromUrl, getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
-import { NotFoundPage } from 'pages/not-found';
+import { getAccountPageRender } from 'pages/account';
+import { ChangePassword } from 'pages/change-password';
+import { ChatsPage } from 'pages/chats';
 import { InternalErrorPage } from 'pages/internal-error';
+import { NotFoundPage } from 'pages/not-found';
 import { SignInPage } from 'pages/sign-in';
 import { SignUpPage } from 'pages/sign-up';
-import { getAccountPageRender } from 'pages/account';
-import { ChatsPage } from 'pages/chats';
-import { ChangePassword } from 'pages/change-password';
 import { SiteMap } from 'pages/site-map';
+import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
 
 import './styles.pcss';
 
@@ -20,7 +20,7 @@ type PageFunction = (...props: any[]) => string;
       [RouteNames.SIGN_IN]: SignInPage,
       [RouteNames.SIGN_UP]: SignUpPage,
       [RouteNames.ACCOUNT]: getAccountPageRender(),
-      [RouteNames.ACCOUNT_EDIT]: getAccountPageRender({isEditMode: true}),
+      [RouteNames.ACCOUNT_EDIT]: getAccountPageRender({ isEditMode: true }),
       [RouteNames.CHANGE_PASSWORD]: ChangePassword,
       [RouteNames.CHATS]: ChatsPage,
       [RouteNames.NOT_FOUND]: NotFoundPage,
@@ -63,7 +63,7 @@ type PageFunction = (...props: any[]) => string;
     renderPage(event.newURL);
   };
 
-  document.addEventListener('DOMContentLoaded', () => renderPage(initialUrl), {once: true});
+  document.addEventListener('DOMContentLoaded', () => renderPage(initialUrl), { once: true });
   window.addEventListener('hashchange', handleRouting);
 })();
 
@@ -82,7 +82,6 @@ type PageFunction = (...props: any[]) => string;
 
   document.addEventListener('click', (e) => {
     if (isEl(e.target)) {
-
       //TODO: После подключения авторизации и событий убрать.
       // Переходим в чаты
       if (e.target.getAttribute('id') === 'authButton') {

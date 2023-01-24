@@ -1,8 +1,8 @@
-import { cn } from 'utils/bem';
 import { GetTemplateProps } from 'types/common';
+import { cn } from 'utils/bem';
 
 const templateProps = {
-    page: '{{{page}}}',
+  page: '{{{page}}}',
 } as const;
 
 const cnAppContainer = cn('AppContainer');

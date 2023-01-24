@@ -1,12 +1,11 @@
-import Handlebars from 'handlebars';
 import { Button } from 'components/button';
 import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
 import { TextField } from 'components/text-field';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import Handlebars from 'handlebars';
 import { cn } from 'utils/bem';
+import { getUrlByRoute, RouteNames } from 'utils/router';
 
 import './styles.pcss';
-
 
 const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
 
@@ -65,4 +64,3 @@ export const ChangePassword = () => {
     backBtnLabel: 'К редактированию аккаунта',
   });
 };
-

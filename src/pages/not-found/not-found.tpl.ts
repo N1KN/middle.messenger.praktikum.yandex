@@ -1,8 +1,8 @@
-import { cn } from 'utils/bem';
 import { GetTemplateProps } from 'types/common';
+import { cn } from 'utils/bem';
 
 const templateProps = {
-    chatsLinkButton: '{{{chatsLinkButton}}}',
+  chatsLinkButton: '{{{chatsLinkButton}}}',
 } as const;
 
 const cnNotFoundPage = cn('NotFoundPage');

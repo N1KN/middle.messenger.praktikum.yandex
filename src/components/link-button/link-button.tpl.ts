@@ -1,15 +1,15 @@
-import { cn } from 'utils/bem';
 import { GetTemplateProps } from 'types/common';
+import { cn } from 'utils/bem';
 
 import './styles.pcss';
 
 const templateProps = {
-    additionalClassName: '{{additionalClassName}}',
-    url: '{{url}}',
-    text: '{{text}}'
+  additionalClassName: '{{additionalClassName}}',
+  url: '{{url}}',
+  text: '{{text}}',
 } as const;
 
-export const cnLinkButton = cn('LinkButton')
+export const cnLinkButton = cn('LinkButton');
 export const linkButtonTemplate = `
 <a href="${templateProps['url']}" class="${cnLinkButton()}${templateProps['additionalClassName']}" tabindex="0">
   ${templateProps['text']}

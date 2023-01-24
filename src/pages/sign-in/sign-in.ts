@@ -1,9 +1,9 @@
-import Handlebars from 'handlebars';
 import { Button } from 'components/button';
-import { TextField } from 'components/text-field';
 import { LinkButton } from 'components/link-button';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { TextField } from 'components/text-field';
+import Handlebars from 'handlebars';
 import { cn } from 'utils/bem';
+import { getUrlByRoute, RouteNames } from 'utils/router';
 
 import './styles.pcss';
 
@@ -12,8 +12,7 @@ const cnSignInPage = cn('SignInPage');
 const signUpLink = getUrlByRoute(RouteNames.SIGN_UP);
 
 export const SignInPage = () => {
-
-    const template = `
+  const template = `
     <main class="${cnSignInPage()}">
         <form class="${cnSignInPage('form')}">
             <div class="${cnSignInPage('title')}">Вход</div>
@@ -28,23 +27,23 @@ export const SignInPage = () => {
         </form>
     </main>`;
 
-    return Handlebars.compile(template)({
-        loginInput: TextField({
-            title: 'Логин',
-            name: 'login',
-        }),
-        passwordInput: TextField({
-            title: 'Пароль',
-            name: 'password',
-            type: 'password',
-        }),
-        authButton: Button({
-            id: 'authButton',
-            text: 'Авторизация'
-        }),
-        signUpLink: LinkButton({
-            text: 'Нет аккаунта?',
-            url: signUpLink
-        }),
-    });
+  return Handlebars.compile(template)({
+    loginInput: TextField({
+      title: 'Логин',
+      name: 'login',
+    }),
+    passwordInput: TextField({
+      title: 'Пароль',
+      name: 'password',
+      type: 'password',
+    }),
+    authButton: Button({
+      id: 'authButton',
+      text: 'Авторизация',
+    }),
+    signUpLink: LinkButton({
+      text: 'Нет аккаунта?',
+      url: signUpLink,
+    }),
+  });
 };

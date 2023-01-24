@@ -11,7 +11,11 @@ type PageWrapperWithBackButtonProps = {
 
 const cnPageWrapperWithBackButton = cn('PageWrapperWithBackButton');
 
-export const PageWrapperWithBackButton = ({pageContent, backBtnUrl, backBtnLabel}: PageWrapperWithBackButtonProps) => {
+export const PageWrapperWithBackButton = ({
+  pageContent,
+  backBtnUrl,
+  backBtnLabel,
+}: PageWrapperWithBackButtonProps) => {
   const ariaLabelAttr = backBtnLabel ? `aria-label="{{{backBtnLabel}}}"` : '';
 
   const template = `
@@ -27,7 +31,6 @@ export const PageWrapperWithBackButton = ({pageContent, backBtnUrl, backBtnLabel
   return Handlebars.compile(template)({
     pageContent,
     backBtnUrl,
-    backBtnLabel
+    backBtnLabel,
   });
 };
-

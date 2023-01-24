@@ -1,9 +1,9 @@
-import { cn } from 'utils/bem';
 import { GetTemplateProps } from 'types/common';
+import { cn } from 'utils/bem';
 
 const templateProps = {
-    errorNumber: '{{{errorNumber}}}',
-    chatsLinkButton: '{{{chatsLinkButton}}}',
+  errorNumber: '{{{errorNumber}}}',
+  chatsLinkButton: '{{{chatsLinkButton}}}',
 } as const;
 
 const cnInternalErrorPage = cn('InternalErrorPage');
