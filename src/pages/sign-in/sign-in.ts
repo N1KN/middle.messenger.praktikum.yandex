@@ -14,7 +14,7 @@ const signUpLink = getUrlByRoute(RouteNames.SIGN_UP);
 export const SignInPage = () => {
 
     const template = `
-    <div class="${cnSignInPage()}">
+    <main class="${cnSignInPage()}">
         <form class="${cnSignInPage('form')}">
             <div class="${cnSignInPage('title')}">Вход</div>
             <div class="${cnSignInPage('body')}">
@@ -26,7 +26,7 @@ export const SignInPage = () => {
                 </div>
             </div>
         </form>
-    </div>`;
+    </main>`;
 
     return Handlebars.compile(template)({
         loginInput: TextField({

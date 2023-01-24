@@ -8,11 +8,11 @@ const templateProps = {
 
 const cnInternalErrorPage = cn('InternalErrorPage');
 export const internalErrorPageTemplate = `
-<div class="${cnInternalErrorPage()}">
+<main class="${cnInternalErrorPage()}">
     <h1 class="${cnInternalErrorPage('title')}">${templateProps['errorNumber']}</h1>
     <p class="${cnInternalErrorPage('subtitle')}">Уже фиксим</p>
     ${templateProps['chatsLinkButton']}
-</div>
+</main>
 `;
 
 export type InternalErrorPageTemplateProps = GetTemplateProps<typeof templateProps>;

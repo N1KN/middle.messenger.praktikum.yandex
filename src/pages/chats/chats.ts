@@ -14,29 +14,29 @@ const accountLink = getUrlByRoute(RouteNames.ACCOUNT);
 export const ChatsPage = () => {
     const template = `
     <div class="${cnChatsPage()}">
-      <div class="${cnChatsPage('leftBlock')}">
-        <div class="${cnChatsPage('chatListHeader')}">
+      <aside class="${cnChatsPage('leftBlock')}">
+        <header class="${cnChatsPage('chatListHeader')}">
             <div class="${cnChatsPage('profileBtnWrapper')}">
             {{{profileBtn}}}
             </div>
             <form class="${cnChatsPage('chatSearchWrapper')}">
               <div class="${cnChatsPage('chatSearch')}">
                 <input name="search_chat" type="text" placeholder="Поиск">
-                <img class="search-chat__img" src="${searchIconUrl}" alt="Поиск по чату">
+                <img src="${searchIconUrl}" alt="Поиск по чату">
               </div>
             </form>
-        </div>
+        </header>
         <div class="${cnChatsPage('chatList')}">
             {{#each chatItem}}
                 {{{this}}}
             {{/each}}
         </div>
-      </div>
-      <div class="${cnChatsPage('rightBlock')}">
+      </aside>
+      <main class="${cnChatsPage('rightBlock')}">
         <div class="${cnChatsPage('emptyContent')}">
             <div>Выберите чат, чтобы отправить сообщение</div>
         </div>
-      </div>
+      </main>
     </div>`;
 
     return Handlebars.compile(template)({

@@ -4,27 +4,30 @@ import { cn } from 'utils/bem';
 import './styles.pcss';
 
 type PageWrapperWithBackButtonProps = {
-    pageContent: string;
-    backBtnUrl: string;
+  pageContent: string;
+  backBtnUrl: string;
+  backBtnLabel?: string;
 };
 
 const cnPageWrapperWithBackButton = cn('PageWrapperWithBackButton');
 
-export const PageWrapperWithBackButton = ({ pageContent, backBtnUrl }: PageWrapperWithBackButtonProps) => {
+export const PageWrapperWithBackButton = ({pageContent, backBtnUrl, backBtnLabel}: PageWrapperWithBackButtonProps) => {
+  const ariaLabelAttr = backBtnLabel ? `aria-label="{{{backBtnLabel}}}"` : '';
 
-    const template = `
+  const template = `
     <div class="${cnPageWrapperWithBackButton()}">
-        <a class="${cnPageWrapperWithBackButton('backButtonWrapper')}" href="{{backBtnUrl}}">
+        <a class="${cnPageWrapperWithBackButton('backButtonWrapper')}" href="{{backBtnUrl}}" ${ariaLabelAttr}>
             <div class="${cnPageWrapperWithBackButton('backButton')}"></div>
         </a>
-        <div class="${cnPageWrapperWithBackButton('pageWrapper')}">
+        <main class="${cnPageWrapperWithBackButton('pageWrapper')}">
             {{{pageContent}}}
-        </div>
+        </main>
     </div>`;
 
-    return Handlebars.compile(template)({
-        pageContent,
-        backBtnUrl
-    });
+  return Handlebars.compile(template)({
+    pageContent,
+    backBtnUrl,
+    backBtnLabel
+  });
 };
 

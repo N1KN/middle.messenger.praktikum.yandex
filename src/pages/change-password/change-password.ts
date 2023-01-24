@@ -14,7 +14,7 @@ const cnChangePassword = cn('ChangePassword');
 const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT_EDIT);
 
 export const ChangePassword = () => {
-    const template = `
+  const template = `
         <form class="${cnChangePassword()}">
             <div class="${cnChangePassword('headerContent')}">
                 <div class="${cnChangePassword('changeAvatar')}">
@@ -22,7 +22,7 @@ export const ChangePassword = () => {
                     <div class="${cnChangePassword('changeAvatarText')}">Поменять аватар</div>
                 </div>
             </div>
-    
+
             <div class="${cnChangePassword('bodyContent')}">
                 {{{oldPassword}}}
                 {{{newPassword}}}
@@ -33,35 +33,36 @@ export const ChangePassword = () => {
             </div>
         </form>`;
 
-    const pageContent = Handlebars.compile(template)({
-        oldPassword: TextField({
-            mode: 'profile',
-            title: 'Старый пароль',
-            name: 'old_password',
-            type: 'password',
-        }),
-        newPassword: TextField({
-            mode: 'profile',
-            title: 'Новый пароль',
-            name: 'new_password',
-            type: 'password',
-        }),
-        passwordRepeat: TextField({
-            mode: 'profile',
-            title: 'Новый пароль(ещё раз)',
-            name: 'new_password_repeat',
-            type: 'password',
-        }),
+  const pageContent = Handlebars.compile(template)({
+    oldPassword: TextField({
+      mode: 'profile',
+      title: 'Старый пароль',
+      name: 'old_password',
+      type: 'password',
+    }),
+    newPassword: TextField({
+      mode: 'profile',
+      title: 'Новый пароль',
+      name: 'new_password',
+      type: 'password',
+    }),
+    passwordRepeat: TextField({
+      mode: 'profile',
+      title: 'Новый пароль(ещё раз)',
+      name: 'new_password_repeat',
+      type: 'password',
+    }),
 
-        passwordSaveButton: Button({
-            id: 'savePasswordButton',
-            text: 'Сохранить',
-        })
-    });
+    passwordSaveButton: Button({
+      id: 'savePasswordButton',
+      text: 'Сохранить',
+    }),
+  });
 
-    return PageWrapperWithBackButton({
-        pageContent,
-        backBtnUrl: accountEditLink,
-    })
+  return PageWrapperWithBackButton({
+    pageContent,
+    backBtnUrl: accountEditLink,
+    backBtnLabel: 'К редактированию аккаунта',
+  });
 };
 

@@ -15,7 +15,7 @@ const signInLink = getUrlByRoute(RouteNames.SIGN_IN);
 export const SignUpPage = () => {
 
     const template = `
-    <div class="${cnSignUpPage()}">
+    <main class="${cnSignUpPage()}">
         <form id="signUpForm" class="${cnSignUpPage('form')}">
             <div class="${cnSignUpPage('title')}">Регистрация</div>
             <div class="${cnSignUpPage('body')}">

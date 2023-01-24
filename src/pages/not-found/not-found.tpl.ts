@@ -7,11 +7,11 @@ const templateProps = {
 
 const cnNotFoundPage = cn('NotFoundPage');
 export const notFoundPageTemplate = `
-<div class="${cnNotFoundPage()}">
+<main class="${cnNotFoundPage()}">
     <h1 class="${cnNotFoundPage('title')}">404</h1>
     <p class="${cnNotFoundPage('subtitle')}">Не туда попали</p>
     ${templateProps['chatsLinkButton']}
-</div>
+</main>
 `;
 
 export type NotFoundPageProps = GetTemplateProps<typeof templateProps>;

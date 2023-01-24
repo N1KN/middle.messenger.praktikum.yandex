@@ -1,4 +1,5 @@
 export enum RouteNames {
+    ROOT_PAGE = 'ROOT_PAGE',
     SIGN_IN = 'sign-in',
     SIGN_UP = 'sign-up',
     ACCOUNT = 'account',
@@ -10,6 +11,7 @@ export enum RouteNames {
 }
 
 export const SITE_PATHS: Record<RouteNames, string> = {
+    [RouteNames.ROOT_PAGE]: '',
     [RouteNames.SIGN_IN]: 'sign-in',
     [RouteNames.SIGN_UP]: 'sign-up',
     [RouteNames.ACCOUNT]: 'account',
@@ -48,4 +50,6 @@ export function getRouteByUrlOrNotFoundRoute(url: string, notFoundRoteByDefault:
     }
 
     return routeName?.[0];
+
+
 }
