@@ -1,0 +1,57 @@
+{
+  "name": "yap-middle-frontend-one",
+  "version": "1.0.0",
+  "description": "",
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=12.21",
+    "npm": ">=6.14"
+  },
+  "scripts": {
+    "start": "rimraf .parcel-cache && npm run build && node scripts/server.js",
+    "dev": "parcel src/index.html --port 1234 --open --no-cache",
+    "build": "parcel build src/index.html --no-cache",
+    "check": "tsc --noEmit",
+    "lint": "npx eslint ./",
+    "lint:fix": "npx eslint --fix ./src --ext .ts",
+    "format:fix": "npx prettier --write \"./src/**/*.ts\"",
+    "format": "npx prettier --check \"./src/**/*.ts\"",
+    "precommit": "npm run lint:fix && npm run format:fix"
+  },
+  "alias": {
+    "components": "./src/components",
+    "containers": "./src/containers",
+    "constants": "./src/constants",
+    "pages": "./src/pages",
+    "static": "./src/static",
+    "types": "./src/types",
+    "utils": "./src/utils"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "constants-browserify": "^1.0.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "handlebars": "^4.7.7",
+    "parcel": "^2.8.3",
+    "parcel-resolver-ts-base-url": "^1.3.1",
+    "postcss": "^8.4.21",
+    "postcss-nested": "^6.0.0",
+    "prettier": "^2.8.3",
+    "rimraf": "^4.1.2",
+    "typescript": "^4.9.4"
+  }
+}

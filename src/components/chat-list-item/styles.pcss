@@ -1,0 +1,86 @@
+.ChatListItem {
+    display: flex;
+    /*border-top: 1px solid var(--color-bg-ghost); */
+    padding: 10px;
+    transition: 0.3s background-color;
+    text-align: left;
+    cursor: pointer;
+
+    &_isActive {
+        cursor: unset;
+        background-color: var(--color-bg-light-blue);
+    }
+
+    &:hover {
+        background-color: var(--color-bg-light-blue);
+    }
+
+    &-avatar {
+        margin-right: 10px;
+        width: 47px;
+        height: 47px;
+        border-radius: 50%;
+        background-color: var(--text-secondary-color);
+    }
+
+    &-title {
+        margin: 0 0 6px;
+        font-size: 13px;
+        line-height: 13px;
+        font-weight: 600;
+        color: var(--text-primary-color);
+    }
+
+    &-lastMsgText {
+        max-width: 180px;
+        margin: 0;
+        font-size: 12px;
+        line-height: 15px;
+        font-weight: 500;
+        color: var(--text-secondary-color);
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+
+        & span {
+            margin-right: 3px;
+            color: var(--text-primary-color);
+        }
+    }
+
+    &-lastActivityWrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-grow: 1;
+    }
+
+    &-lastMsgTime {
+        margin: 0;
+        white-space: nowrap;
+        align-self: flex-end;
+        font-size: 9px;
+        color: var(--text-secondary-color);
+        font-weight: 500;
+        line-height: 13px;
+    }
+
+    &-unreadMsgCount {
+        display: none;
+        margin: 0;
+        padding: 4px 7px;
+        align-self: flex-end;
+        font-size: 11px;
+        line-height: 12px;
+        font-weight: 500;
+        color: var(--text-invert-color);
+        background-color: var(--color-bg-blue);
+        border-radius: 50%;
+
+        &_isShow {
+            display: block;
+        }
+    }
+}
