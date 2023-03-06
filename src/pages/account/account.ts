@@ -80,6 +80,7 @@ export class AccountPage extends Block<AccountPageProps> {
       footerButtons = {
         accountSaveButton: new Button({
           id: 'saveAccountButton',
+          isSubmit: true,
           label: 'Сохранить',
         }),
       };

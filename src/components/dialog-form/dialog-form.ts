@@ -33,6 +33,7 @@ export class DialogForm extends Block<DialogFormProps> {
       // }),
       sendBtn: new Button({
         className: cnDialogForm('button'),
+        isSubmit: true,
         label: 'Отправить сообщение',
       }),
     };

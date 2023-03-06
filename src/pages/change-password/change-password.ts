@@ -94,6 +94,7 @@ export class ChangePassword extends Block {
 
       passwordSaveButton: new Button({
         id: 'savePasswordButton',
+        isSubmit: true,
         label: 'Сохранить',
       }),
     };

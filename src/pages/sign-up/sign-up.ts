@@ -77,6 +77,7 @@ export class SignUpPage extends Block {
       }),
       regButton: new Button({
         id: 'regButton',
+        isSubmit: true,
         label: 'Зарегистрироваться',
       }),
       signUpLink: new LinkButton({

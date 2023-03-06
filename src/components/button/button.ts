@@ -7,6 +7,7 @@ type ButtonProps = {
   className?: string;
   id?: string;
   label: string;
+  isSubmit?: boolean;
   onClick?: (e: MouseEvent) => void;
 };
 
@@ -24,11 +25,12 @@ export class Button extends Block<ButtonProps> {
   }
 
   render() {
-    const { className, label, id } = this.props;
+    const { className, label, id, isSubmit = false } = this.props;
     const idAttr = id ? `id="${id}"` : '';
+    const typeAttr = isSubmit ? `type="submit"` : '';
 
     const template = `
-        <button ${idAttr} class="${cnButton('', [className])}">
+        <button ${idAttr} ${typeAttr} class="${cnButton('', [className])}">
         ${label}
         </button>`;
 

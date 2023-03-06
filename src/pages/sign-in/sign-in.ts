@@ -50,6 +50,7 @@ export class SignInPage extends Block {
       }),
       authButton: new Button({
         id: 'authButton',
+        isSubmit: true,
         label: 'Авторизация',
       }),
       signUpLink: new LinkButton({
