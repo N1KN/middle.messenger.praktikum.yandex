@@ -55,6 +55,7 @@ export class AccountPage extends Block<AccountPageProps> {
         email: validateEmail,
         phone: validatePhone,
         login: loginValidator,
+        display_name: loginValidator,
         first_name: validateName,
         second_name: validateName,
       },
@@ -129,6 +130,7 @@ export class AccountPage extends Block<AccountPageProps> {
                 {{{loginInput}}}
                 {{{firstNameInput}}}
                 {{{secondNameInput}}}
+                {{{displayNameInput}}}
                 {{{phoneInput}}}
             </div>
             <div class="${cnAccountPage('footerContent')}">
@@ -174,7 +176,12 @@ export class AccountPage extends Block<AccountPageProps> {
         value: '79876543210',
         errorText: 'Введите корректный номер телефона.',
       }),
-
+      displayNameInput: new TextField({
+        ...textFieldCfg,
+        title: 'Имя в чате',
+        name: 'display_name',
+        errorText: 'Требование: 3-20 символов, латиница, должен начинаться с буквы, может включать цифры.',
+      }),
       ...footerButtons,
     };
 
