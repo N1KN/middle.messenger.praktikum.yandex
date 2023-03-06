@@ -3,12 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -51,29 +46,39 @@ module.exports = {
             position: 'after',
           },
           {
+            pattern: 'sanitize-html',
+            group: 'external',
+            position: 'after',
+          },
+          {
             pattern: 'components/**',
-            group: 'internal',
+            group: 'parent',
+          },
+          {
+            pattern: 'constants/**',
+            group: 'parent',
           },
           {
             pattern: 'containers/**',
-            group: 'internal',
+            group: 'parent',
           },
           {
-            pattern: 'pages/**',
-            group: 'internal',
+            pattern: 'lib/**',
+            group: 'parent',
           },
+
           {
             pattern: 'static/**',
-            group: 'internal',
+            group: 'parent',
           },
           {
             pattern: 'types/**',
-            group: 'internal',
+            group: 'parent',
             position: 'after',
           },
           {
             pattern: 'utils/**',
-            group: 'internal',
+            group: 'parent',
           },
         ],
         alphabetize: {

@@ -1,5 +1,6 @@
 import { AppContainer } from 'containers/app';
-import { getAccountPageRender } from 'pages/account';
+import { Block, IBlockProps } from 'lib/block';
+import { AccountPage } from 'pages/account';
 import { ChangePassword } from 'pages/change-password';
 import { ChatsPage } from 'pages/chats';
 import { InternalErrorPage } from 'pages/internal-error';
@@ -11,23 +12,25 @@ import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/r
 
 import './styles.pcss';
 
-type PageFunction = (...props: any[]) => string;
-
 (() => {
-  const getPageByRouteName = (routeName: RouteNames): PageFunction => {
-    const PAGES: Record<RouteNames, PageFunction> = {
-      [RouteNames.ROOT_PAGE]: SiteMap,
-      [RouteNames.SIGN_IN]: SignInPage,
-      [RouteNames.SIGN_UP]: SignUpPage,
-      [RouteNames.ACCOUNT]: getAccountPageRender(),
-      [RouteNames.ACCOUNT_EDIT]: getAccountPageRender({ isEditMode: true }),
-      [RouteNames.CHANGE_PASSWORD]: ChangePassword,
-      [RouteNames.CHATS]: ChatsPage,
-      [RouteNames.NOT_FOUND]: NotFoundPage,
-      [RouteNames.INTERNAL_ERROR]: InternalErrorPage,
+  // @ts-ignore
+  window.EVENTS_ON_ELEMENT = [];
+
+  const getPageByRouteName = (routeName: RouteNames): Block => {
+    const PAGES: Record<RouteNames, { component: typeof Block<IBlockProps<any>>; props: any }> = {
+      [RouteNames.ROOT_PAGE]: { component: SiteMap, props: {} },
+      [RouteNames.SIGN_IN]: { component: SignInPage, props: {} },
+      [RouteNames.SIGN_UP]: { component: SignUpPage, props: {} },
+      [RouteNames.ACCOUNT]: { component: AccountPage, props: {} },
+      [RouteNames.ACCOUNT_EDIT]: { component: AccountPage, props: { isEditMode: true } },
+      [RouteNames.CHANGE_PASSWORD]: { component: ChangePassword, props: {} },
+      [RouteNames.CHATS]: { component: ChatsPage, props: {} },
+      [RouteNames.NOT_FOUND]: { component: NotFoundPage, props: {} },
+      [RouteNames.INTERNAL_ERROR]: { component: InternalErrorPage, props: {} },
     };
 
-    return PAGES[routeName];
+    const { props, component: Component } = PAGES[routeName];
+    return new Component(props);
   };
 
   const rootElement = document.querySelector('#root');
@@ -54,9 +57,14 @@ type PageFunction = (...props: any[]) => string;
       throw new Error(`Root element is not found`);
     }
 
-    rootElement.innerHTML = AppContainer({
-      page: getPageByRouteName(routeName)(),
+    const pageComp = getPageByRouteName(routeName);
+
+    const appContainerBlock = new AppContainer({
+      page: pageComp,
     });
+
+    rootElement.replaceChildren(appContainerBlock.getContent());
+    appContainerBlock.emitComponentDidMount();
   };
 
   const handleRouting = (event: HashChangeEvent) => {

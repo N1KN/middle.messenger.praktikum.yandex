@@ -93,4 +93,36 @@
         font-size: 13px;
         line-height: 13px;
     }
+
+    &-dialogWrapper {
+
+    }
+
+    &-dialogHeader {
+      border-bottom: 1px solid var(--color-bg-border);
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      display: flex;
+    }
+
+    &-dialogContent {
+      flex-direction: column;
+      flex-grow: 1;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    &-dialogFooter {
+      border-top: 1px solid var(--color-bg-border);
+      padding-top: 11px;
+
+      & form {
+        justify-content: space-between;
+        align-items: center;
+        font-family: inherit;
+        display: flex;
+      }
+    }
 }

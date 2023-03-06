@@ -1,4 +1,4 @@
-import Handlebars from 'handlebars';
+import { Block } from 'lib/block';
 import { cn } from 'utils/bem';
 
 import './styles.pcss';
@@ -18,47 +18,77 @@ type TextFieldProps = {
   minLength?: number;
   maxLength?: number;
   isRequired?: boolean;
+  value?: string;
+  onChange?: ({ e, value }: { e: InputEvent; value: string }) => void;
+  onBlur?: (e: FocusEvent) => void;
 };
 
 const cnTextField = cn('TextField');
 
-export const TextField = (props: TextFieldProps) => {
-  const {
-    className,
-    mode = defaultMode,
-    isDisabled,
-    type = 'text',
-    title,
-    name,
-    errorText,
-    minLength,
-    maxLength,
-    isRequired,
-  } = props;
-  const requiredAttr = isRequired ? 'required="true"' : '';
-  const disabledAttr = isDisabled ? 'disabled="true"' : '';
-  const minLengthAttr = minLength ? `minlength="${minLength}"` : '';
-  const maxLengthAttr = maxLength ? `maxlength="${maxLength}"` : '';
+export class TextField extends Block<TextFieldProps> {
+  static setInputInvalidState(el: HTMLInputElement, isValid: boolean) {
+    el.dataset['error'] = !isValid ? 'show' : undefined;
+  }
+  constructor(props: TextFieldProps) {
+    const { onChange, onBlur, ...otherProps } = props;
 
-  const template = `
-    <div class="${cnTextField('', { mode }, [className])}">
-        <label class="${cnTextField('inputWrapper')}">
-            <input 
-                class="${cnTextField('input')}"
-                type="${type}"
-                name="${name}"
-                ${'' /* Пустой плейсхолдер нужен для корректной работы css селектора :placeholder-shown*/}
-                placeholder=" "
-                ${minLengthAttr}
-                ${maxLengthAttr}
-                ${requiredAttr}
-                ${disabledAttr}
-            >
-            <span class="${cnTextField('title')}">${title}</span>
-        </label>
+    const events = {
+      input: (e: InputEvent) => {
+        if (onChange) {
+          onChange({
+            e,
+            value: (e.target as HTMLInputElement).value,
+          });
+        }
+      },
+      blur: (e: FocusEvent) => {
+        if (onBlur) {
+          onBlur(e);
+        }
+      },
+    };
+
+    super({ ...otherProps, events }, 'input');
+  }
+
+  render() {
+    const {
+      className,
+      mode = defaultMode,
+      isDisabled,
+      type = 'text',
+      title,
+      name,
+      errorText,
+      minLength,
+      maxLength,
+      isRequired,
+      value,
+    } = this.props;
+    const requiredAttr = isRequired ? 'required="true"' : '';
+    const disabledAttr = isDisabled ? 'disabled="true"' : '';
+    const minLengthAttr = minLength ? `minlength="${minLength}"` : '';
+    const maxLengthAttr = maxLength ? `maxlength="${maxLength}"` : '';
+
+    const template = `
+    <label class="${cnTextField('', { mode, isDisabled }, [className])}">
+        <input
+            class="${cnTextField('input')}"
+            type="${type}"
+            name="${name}"
+            ${'' /* Пустой плейсхолдер нужен для корректной работы css селектора :placeholder-shown*/}
+            placeholder=" "
+            ${minLengthAttr}
+            ${maxLengthAttr}
+            ${requiredAttr}
+            ${disabledAttr}
+            value="{{value}}"
+        >
+        <span class="${cnTextField('title')}">${title}</span>
         <p class="${cnTextField('error', { show: errorText !== undefined })}">${errorText ?? ''}</p>
-    </div>
+    </label>
     `;
 
-  return Handlebars.compile(template)({});
-};
+    return this.compile(template, { value });
+  }
+}

@@ -1,36 +1,40 @@
-import Handlebars from 'handlebars';
+import { Block, IBlockProps } from 'lib/block';
 import { cn } from 'utils/bem';
 
 import './styles.pcss';
 
 type PageWrapperWithBackButtonProps = {
-  pageContent: string;
+  pageContentTemplate: string;
+  children: Record<string, Block | Block[]>;
   backBtnUrl: string;
   backBtnLabel?: string;
 };
 
 const cnPageWrapperWithBackButton = cn('PageWrapperWithBackButton');
 
-export const PageWrapperWithBackButton = ({
-  pageContent,
-  backBtnUrl,
-  backBtnLabel,
-}: PageWrapperWithBackButtonProps) => {
-  const ariaLabelAttr = backBtnLabel ? `aria-label="{{{backBtnLabel}}}"` : '';
+export class PageWrapperWithBackButton extends Block<PageWrapperWithBackButtonProps> {
+  constructor(props: IBlockProps<PageWrapperWithBackButtonProps>) {
+    super(props);
+  }
 
-  const template = `
+  render() {
+    const { pageContentTemplate, backBtnUrl, backBtnLabel } = this.props;
+    const ariaLabelAttr = backBtnLabel ? `aria-label="{{{backBtnLabel}}}"` : '';
+
+    const template = `
     <div class="${cnPageWrapperWithBackButton()}">
         <a class="${cnPageWrapperWithBackButton('backButtonWrapper')}" href="{{backBtnUrl}}" ${ariaLabelAttr}>
             <div class="${cnPageWrapperWithBackButton('backButton')}"></div>
         </a>
         <main class="${cnPageWrapperWithBackButton('pageWrapper')}">
-            {{{pageContent}}}
+            ${pageContentTemplate}
         </main>
     </div>`;
 
-  return Handlebars.compile(template)({
-    pageContent,
-    backBtnUrl,
-    backBtnLabel,
-  });
-};
+    return this.compile(template, {
+      ...this.props,
+      backBtnUrl,
+      backBtnLabel,
+    });
+  }
+}
