@@ -1,84 +1,84 @@
 .ChangePassword {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+  gap: 60px;
+  width: 510px;
+
+  &-changeAvatar {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+    max-width: 130px;
+    max-height: 130px;
+    overflow: hidden;
+    border-radius: 50%;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      background-color: var(--color-bg-invert);
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: 0.3s opacity;
+    }
+
+    &:hover::before {
+      opacity: 0.5;
+    }
+
+    &:hover > .AccountPage-changeAvatarText {
+      opacity: 1;
+    }
+  }
+
+  &-changeAvatarText {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: var(--text-invert-color);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14px;
+    transform: translate(-50%, -50%);
+    transition: 0.3s opacity;
+  }
+
+  &-userName {
+    &_isEditMode {
+      opacity: 0;
+    }
+  }
+
+  &-headerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+  }
+
+  &-bodyContent {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-grow: 1;
-    gap: 60px;
-    width: 510px;
 
-    &-changeAvatar {
-        display: flex;
-        position: relative;
-        cursor: pointer;
-        max-width: 130px;
-        max-height: 130px;
-        overflow: hidden;
-        border-radius: 50%;
-
-        &::before {
-            content: "";
-            display: inline-block;
-            width: 100%;
-            height: 100%;
-            background-color: var(--color-bg-invert);
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            transition: 0.3s opacity;
-        }
-
-        &:hover::before {
-            opacity: 0.5;
-        }
-
-        &:hover > .AccountPage-changeAvatarText {
-            opacity: 1;
-        }
+    :last-child input {
+      border: none;
     }
+  }
 
-    &-changeAvatarText {
-        opacity: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        color: var(--text-invert-color);
-        text-align: center;
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 14px;
-        transform: translate(-50%, -50%);
-        transition: 0.3s opacity;
-    }
-
-    &-userName {
-        &_isEditMode {
-            opacity: 0;
-        }
-    }
-
-    &-headerContent {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 21px;
-    }
-
-    &-bodyContent {
-        width: 100%;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        :last-child input {
-            border: none;
-        }
-    }
-
-    &-footerContent {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  &-footerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

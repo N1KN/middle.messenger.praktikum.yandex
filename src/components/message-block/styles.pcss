@@ -27,11 +27,11 @@
     &_isMine {
       background-color: var(--color-bg-light-blue);
 
-      & .MessageBlock-time:before {
-        content: "";
+      & .MessageBlock-time::before {
+        content: '';
         width: 10px;
         height: 4px;
-        background-image: url(/src/static/img/is-not-read.svg);
+        background-image: url('/src/static/img/is-not-read.svg');
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -42,8 +42,8 @@
       }
     }
 
-    &_isRead&_isMine .MessageBlock-time:before {
-      background-image: url(/src/static/img/is-read.svg);
+    &_isRead&_isMine .MessageBlock-time::before {
+      background-image: url('/src/static/img/is-read.svg');
     }
   }
 

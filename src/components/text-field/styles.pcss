@@ -1,9 +1,10 @@
 .TextField {
   position: relative;
   cursor: text;
+
   &_isDisabled {
-     cursor: default;
-   }
+    cursor: default;
+  }
 
   &_mode_profile &-input {
     text-align: right;
@@ -24,14 +25,14 @@
     border: none;
     border-bottom: 1px solid var(--color-bg-blue);
     outline: none;
-
     background-color: transparent;
     color: var(--text-primary-color);
     font-weight: 500;
     line-height: 13px;
     font-size: 13px;
 
-    .TextField_mode_default &:focus + .TextField-title, .TextField_mode_default &:not(:placeholder-shown) + .TextField-title {
+    .TextField_mode_default &:focus + .TextField-title,
+    .TextField_mode_default &:not(:placeholder-shown) + .TextField-title {
       top: -12px;
       font-size: 9px;
       line-height: 9px;
@@ -43,13 +44,10 @@
     width: 100%;
     top: 6px;
     left: 0;
-
     color: var(--text-secondary-color);
-
     font-size: 13px;
     line-height: 13px;
     font-weight: 500;
-
     transition: 0.3s font-size, top 0.3s;
   }
 
@@ -66,7 +64,7 @@
       /* opacity: 1; */
     }
 
-    .TextField input[data-error="show"] ~ & {
+    .TextField input[data-error='show'] ~ & {
       opacity: 1;
     }
   }
