@@ -1,46 +1,45 @@
 .SignInPage {
+  display: flex;
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 340px;
+  height: 615px;
+  padding: 50px 30px 30px;
+  flex-direction: column;
+  box-shadow: var(--block-shadow);
+  border-radius: 12px;
+
+  &-form {
     display: flex;
-    font-family: inherit;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 340px;
-    height: 615px;
-    padding: 50px 30px 30px;
     flex-direction: column;
-    box-shadow: var(--block-shadow);
-    border-radius: 12px;
+    flex-grow: 1;
+    gap: 40px;
+    margin-block: 0;
+  }
 
-    &-form {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        gap: 40px;
-        margin-block: 0;
-    }
+  &-title {
+    font-size: 20px;
+    color: var(--text-primary-color);
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 0;
+    text-align: center;
+  }
 
-    &-title {
-        font-size: 20px;
-        color: var(--text-primary-color);
-        font-weight: 500;
-        line-height: 20px;
-        letter-spacing: 0;
-        text-align: center;
-    }
+  &-body {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+  }
 
-    &-body {
-        display: flex;
-        flex-grow: 1;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 16px;
-    }
-
-    &-buttons {
-        display: flex;
-        flex-grow: 1;
-        flex-direction: column;
-        justify-content: flex-end;
-        gap: 14px
-    }
-
+  &-buttons {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 14px;
+  }
 }

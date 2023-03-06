@@ -1,12 +1,25 @@
-import Handlebars from 'handlebars';
-import { AppContainerTemplate, AppContainerTemplateProps } from './app.tpl';
+import { Block, IBlockProps } from 'lib/block';
+import { AppContainerTemplate } from './app.tpl';
+
 import './styles.pcss';
 
 type AppContainerProps = {
-  page: string;
+  page: Block;
 };
-export const AppContainer = ({ page }: AppContainerProps) => {
-  return Handlebars.compile<AppContainerTemplateProps>(AppContainerTemplate)({
-    page,
-  });
-};
+export class AppContainer extends Block<AppContainerProps> {
+  constructor(props: IBlockProps<AppContainerProps>) {
+    const children = {
+      page: props.page,
+    };
+    super({
+      ...props,
+      children,
+    });
+  }
+
+  protected render() {
+    return this.compile(AppContainerTemplate, {
+      ...this.props,
+    });
+  }
+}

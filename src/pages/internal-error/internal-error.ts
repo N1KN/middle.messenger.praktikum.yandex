@@ -1,7 +1,8 @@
 import { LinkButton } from 'components/link-button';
-import Handlebars from 'handlebars';
+import { Block, IBlockProps } from 'lib/block';
 import { getUrlByRoute, RouteNames } from 'utils/router';
-import { internalErrorPageTemplate, InternalErrorPageTemplateProps } from './internal-error.tpl';
+import { internalErrorPageTemplate } from './internal-error.tpl';
+
 import './styles.pcss';
 
 type InternalErrorPageProps = {
@@ -10,23 +11,31 @@ type InternalErrorPageProps = {
 
 const chatsLink = getUrlByRoute(RouteNames.CHATS);
 
-export const InternalErrorPage = ({ errorNumber = 500 }: InternalErrorPageProps = {}) => {
-  const fixedErrorNumber = ((value: number) => {
-    const absoluteValue = Math.abs(value);
+export class InternalErrorPage extends Block<InternalErrorPageProps> {
+  constructor(props: IBlockProps<InternalErrorPageProps> = {}) {
+    super(props);
+  }
 
-    if (absoluteValue <= 9) {
-      return `50${Math.abs(errorNumber)}`;
-    }
+  protected render(): DocumentFragment {
+    const { errorNumber = 500 } = this.props;
 
-    if (absoluteValue <= 99) {
-      return `5${Math.abs(errorNumber)}`;
-    }
+    const fixedErrorNumber = ((value: number) => {
+      const absoluteValue = Math.abs(value);
 
-    return `${Math.abs(errorNumber)}`;
-  })(errorNumber);
+      if (absoluteValue <= 9) {
+        return `50${Math.abs(errorNumber)}`;
+      }
 
-  return Handlebars.compile<InternalErrorPageTemplateProps>(internalErrorPageTemplate)({
-    errorNumber: fixedErrorNumber,
-    chatsLinkButton: LinkButton({ url: chatsLink, text: 'Назад к чатам' }),
-  });
-};
+      if (absoluteValue <= 99) {
+        return `5${Math.abs(errorNumber)}`;
+      }
+
+      return `${Math.abs(errorNumber)}`;
+    })(errorNumber);
+
+    return this.compile(internalErrorPageTemplate, {
+      errorNumber: fixedErrorNumber,
+      chatsLinkButton: new LinkButton({ url: chatsLink, text: 'Назад к чатам' }).getContent().outerHTML,
+    });
+  }
+}
