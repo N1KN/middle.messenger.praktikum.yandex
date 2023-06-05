@@ -1,9 +1,9 @@
+import { ChatResponseDTO, MessageDTO } from 'api/chats/types';
 import { Avatar } from 'components/avatar';
 import { Button } from 'components/button';
 import { DialogForm } from 'components/dialog-form';
 import { MessageBlock } from 'components/message-block';
 import { Block } from 'lib/block';
-import { MessageDTO, ChatResponseDTO } from 'types/dto';
 import { cn } from 'utils/bem';
 
 import './styles.pcss';

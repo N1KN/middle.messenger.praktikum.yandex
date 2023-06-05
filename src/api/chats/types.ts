@@ -1,10 +1,20 @@
-export type UserResponseDTO = {
-  first_name: string;
-  second_name: string;
-  avatar: string;
-  email: string;
-  login: string;
-  phone: string;
+import { UserResponseDTO } from '../user/types';
+
+export type CreateChatRequest = {
+  title: string;
+};
+
+export type CreateChatResponse = {
+  id: number;
+};
+
+export type ChatIdDTO = {
+  chatId: number;
+};
+
+export type RemoveOrAddUsersToChatRequest = {
+  users: number[];
+  chatId: number;
 };
 
 export type ChatResponseDTO = {
