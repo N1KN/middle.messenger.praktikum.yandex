@@ -7,6 +7,7 @@ import { MessageBlock } from 'components/message-block';
 import Popup from 'components/popup';
 import { TextField } from 'components/text-field';
 import { ChatsControllerInstance } from 'controllers/chat-controller';
+import { MessagesControllerInstance } from 'controllers/message-controller';
 import { Block, IBlockProps, OnUpdateProps } from 'lib/block';
 import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
@@ -92,7 +93,11 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
         label: 'Меню',
         onClick: this.toggleChatMenu.bind(this),
       }),
-      dialogForm: new DialogForm({}),
+      dialogForm: new DialogForm({
+        onSubmit: (msg: string) => {
+          MessagesControllerInstance.sendMessage(chatId!, msg);
+        },
+      }),
       messageBlocks: [],
 
       addUserButton: new Button({

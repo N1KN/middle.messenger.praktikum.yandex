@@ -1,28 +1,19 @@
 import { Button } from 'components/button';
 import { Block } from 'lib/block';
+import { FormHandler } from 'lib/form-validator';
 import { cn } from 'utils/bem';
 
 import './styles.pcss';
 
 type DialogFormProps = {
   className?: string;
+  onSubmit: (text: string) => void;
 };
 
 const cnDialogForm = cn('DialogForm');
 
 export class DialogForm extends Block<DialogFormProps> {
-  constructor(props: DialogFormProps) {
-    const events = {
-      submit: (e: SubmitEvent) => {
-        const targetInput = (e.target as HTMLElement).querySelector('input')!;
-        // TODO: Реализовать работу с сервером
-        // eslint-disable-next-line no-console
-        console.log('Message: ', { form: e.target, [targetInput.name]: targetInput.value });
-      },
-    };
-
-    super({ ...props, events });
-  }
+  private _formHandler?: FormHandler;
 
   protected init() {
     this.children = {
@@ -39,11 +30,31 @@ export class DialogForm extends Block<DialogFormProps> {
     };
   }
 
+  private resetFormListeners() {
+    const form = this.element;
+    if (form instanceof HTMLFormElement) {
+      this._formHandler?.removeListeners(form);
+      this._formHandler?.setListeners(form);
+    }
+  }
+
+  componentDidMount() {
+    this._formHandler = new FormHandler({
+      onlyConfiguredKeys: false,
+      form: (this.element as HTMLFormElement)!,
+    });
+    this.resetFormListeners();
+    this._formHandler.subscribeSubmit(({ message }) => {
+      this.props.onSubmit && this.props.onSubmit(message);
+
+      this.element.querySelector('input')!.value = '';
+    });
+  }
   render() {
     const { className } = this.props;
 
     const template = `
-      <form name="messageForm" class="${cnDialogForm('', [className])}">
+      <form name="messageForm" class="${cnDialogForm('', [className])}" onsubmit="return false">
         {{{attachBtn}}}
         <input class="${cnDialogForm(
           'input',

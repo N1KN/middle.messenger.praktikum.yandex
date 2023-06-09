@@ -75,6 +75,4 @@ export class MessagesController {
   }
 }
 
-const messagesController = new MessagesController();
-
-export default messagesController;
+export const MessagesControllerInstance = new MessagesController();

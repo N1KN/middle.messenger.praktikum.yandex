@@ -6,7 +6,7 @@ import { GetFirstParameter } from 'types/common';
 import { isGoodApiResponse } from 'utils/api';
 import { isNotNil } from 'utils/common';
 import { showTooltip } from 'utils/tooltip';
-import MessagesController from './message-controller';
+import { MessagesControllerInstance } from './message-controller';
 import { UserControllerInstance } from './user-controller';
 
 class ChatsController {
@@ -31,7 +31,7 @@ class ChatsController {
           const tokenResponse = await this.getToken(chat.id);
 
           if (isGoodApiResponse(tokenResponse)) {
-            await MessagesController.connect(chat.id, tokenResponse.data.token);
+            await MessagesControllerInstance.connect(chat.id, tokenResponse.data.token);
           }
         });
 
