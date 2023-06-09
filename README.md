@@ -20,7 +20,7 @@
 Спринт 3 из 4
 
 ### Спринт №1
-https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/1
+https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/2
 
 * Настроил сборку с использованием [Parcel](https://parceljs.org/) и раздачу статических файлов с помощью NodeJS Express
 * Приложение автоматически деплоится на [Netlify](https://www.netlify.com/) из ветки `deploy`. [Ссылка на приложение](https://deploy--sprightly-kataifi-71c800.netlify.app)
@@ -30,7 +30,7 @@ https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/1
 * Реализовал базовый роутер на паре функий
 
 ### Спринт №2
-https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/2
+https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/3
 
 * Реализовал шину событий (`lib/event-bus.ts`)
 * Реализация компонента (`lib/block.ts`) с собственными пропсами, жизненным циклом и реактивным ререндером при изменении пропсов (использованы `Proxy`)
@@ -39,7 +39,7 @@ https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/2
 * Приложение переписано с учётом новых компонентов
 
 ### Спринт №3
-https://github.com/Karmyshkov/middle.messenger.praktikum.yandex/pull/3
+https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/4
 
 * Доработал клиентский роутер (`utils/route.ts`, `utils/route.ts`)
 * Добавлен слой `api` с реалзицие запросов
