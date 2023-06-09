@@ -1,5 +1,6 @@
 import { APP_URLS } from 'constants';
 import { getType, queryStringify } from 'utils/common';
+import { showTooltip } from '../utils/tooltip';
 
 enum Methods {
   GET = 'GET',
@@ -34,10 +35,16 @@ export class HTTPTransport {
   }
 
   get<R = void>(url: string, data: any = undefined, options: RequestOptions = {}) {
-    const query = queryStringify(data);
-
-    const fullUrl = `${url}${query.length > 0 ? `?${query}` : ''}`;
-    return this.request<R>(fullUrl, data, { ...options, method: Methods.GET });
+    try {
+      const query = queryStringify(data ?? {});
+      const fullUrl = `${url}${query.length > 0 ? `?${query}` : ''}`;
+      return this.request<R>(fullUrl, data, { ...options, method: Methods.GET });
+    } catch (err) {
+      showTooltip({
+        message: `Ошибка при отправке GET запроса: ${(err as Error).message}`,
+        type: 'error',
+      });
+    }
   }
 
   post<R = void>(url: string, data: any, options: RequestOptions = {}) {
