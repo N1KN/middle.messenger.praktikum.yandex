@@ -27,14 +27,17 @@ export type HTTPTransportResponse<T = void> = {
 };
 
 export class HTTPTransport {
-  private baseUrl: string;
+  private readonly baseUrl: string;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
   }
 
   get<R = void>(url: string, data: any = undefined, options: RequestOptions = {}) {
-    return this.request<R>(url, data, { ...options, method: Methods.GET });
+    const query = queryStringify(data);
+
+    const fullUrl = `${url}${query.length > 0 ? `?${query}` : ''}`;
+    return this.request<R>(fullUrl, data, { ...options, method: Methods.GET });
   }
 
   post<R = void>(url: string, data: any, options: RequestOptions = {}) {
@@ -62,11 +65,8 @@ export class HTTPTransport {
       const { headers, method = Methods.GET, withoutCredentials } = options;
 
       const xhr = new XMLHttpRequest();
-      const query = method === Methods.GET && !!data ? `${queryStringify(data)}` : '';
 
-      const fullUrl = `${this.baseUrl}${url}${query.length > 0 ? `?${query}` : ''}`;
-
-      xhr.open(method, fullUrl, true);
+      xhr.open(method, `${this.baseUrl}${url}`, true);
 
       xhr.withCredentials = !withoutCredentials;
 
