@@ -1,9 +1,12 @@
 ## Проект: Messenger
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/046ece2b-72f8-4e08-8514-acf4f6520eb4/deploy-status)](https://app.netlify.com/sites/vocal-caramel-a649ff/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/00b510bd-079e-4bd1-9330-ac96adcaf53a/deploy-status)](https://app.netlify.com/sites/monumental-mochi-0d05b9/deploys)
 
 * Макет в Figma(базовый от практикума): [Ссылка на макет](https://www.figma.com/file/mmGHWplanO1npWUlObLBfc/)
-* Netlify: [Ссылка на приложение](https://vocal-caramel-a649ff.netlify.app/)
+* Ссылки на развёрнутое приложение:
+  * Netlify: [Ссылка для ветки deploy](https://monumental-mochi-0d05b9.netlify.app/)
+  * Netlify: [Ссылка для ветки sprint_2](https://vocal-caramel-a649ff.netlify.app/)
+  * Netlify: [Ссылка для ветки sprint_3](https://storied-horse-795083.netlify.app/)
 
 ---
 
@@ -23,7 +26,7 @@
 https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/2
 
 * Настроил сборку с использованием [Parcel](https://parceljs.org/) и раздачу статических файлов с помощью NodeJS Express
-* Приложение автоматически деплоится на [Netlify](https://www.netlify.com/) из ветки `deploy`. [Ссылка на приложение](https://deploy--sprightly-kataifi-71c800.netlify.app)
+* Приложение автоматически деплоится на [Netlify](https://www.netlify.com/) из ветки `deploy`. [Ссылка на приложение](https://monumental-mochi-0d05b9.netlify.app/)
 * Писал приложение сразу используя TypeScript
 * Добавил проверку кодстиля Eslint, Prttier, EditorConfig
 * Использовал процессор для работы со стилями PostCSS
