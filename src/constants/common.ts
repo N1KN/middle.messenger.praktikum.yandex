@@ -1,6 +1,6 @@
 export const ROOT_SELECTOR = '#root';
 export const TOOLTIP_ROOT_SELECTOR = '#tooltip-root';
-export const FORCE_HIDDEN_CLASS = 'force-hidden';
+export const FORCE_HIDDEN_CLASS = 'Root-forceHidden';
 
 export const TOOLTIP_CLASS = 'Tooltip';
 
