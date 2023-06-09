@@ -29,12 +29,15 @@
     "stylelint"
   ],
   "alias": {
+    "api": "./src/api",
     "components": "./src/components",
+    "controllers": "./src/controllers",
     "containers": "./src/containers",
     "constants": "./src/constants",
     "lib": "./src/lib",
     "pages": "./src/pages",
     "static": "./src/static",
+    "store": "./src/store",
     "types": "./src/types",
     "utils": "./src/utils"
   },
@@ -58,9 +61,11 @@
     "handlebars": "~4.7.7",
     "parcel": "~2.8.3",
     "parcel-resolver-ts-base-url": "~1.3.1",
+    "path-browserify": "^1.0.1",
     "postcss": "~8.4.21",
     "postcss-nested": "~6.0.0",
     "prettier": "~2.8.3",
+    "process": "^0.11.10",
     "rimraf": "~4.1.2",
     "stylelint": "~15.2.0",
     "stylelint-config-standard": "~30.0.1",

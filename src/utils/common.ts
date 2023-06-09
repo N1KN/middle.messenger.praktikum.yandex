@@ -3,18 +3,41 @@ Do not access Object.prototype method 'hasOwnProperty' from target object  no-pr
 https://eslint.org/docs/latest/rules/no-prototype-builtins
 */
 
+import { APP_URLS, MESSAGE_MONTHS } from 'constants';
+
 export const hasOwnProperty: (object: unknown, key: PropertyKey) => boolean = Function.prototype.call.bind(
   Object.prototype.hasOwnProperty,
 );
 
-export const getDate = (time: string) => {
-  const date = new Date(time);
+export const isDefined = <T>(p: T): p is Exclude<T, undefined> => p !== undefined;
+
+export const isNotNil = <T>(p: T): p is Exclude<T, undefined | null> => isDefined(p) && p !== null;
+
+export const getDate = (time?: string) => {
+  const date = new Date(time ?? new Date());
   return {
     minute: date.getMinutes(),
     hour: date.getHours(),
     day: date.getDay() + 1,
     month: date.getMonth(),
+    year: date.getFullYear(),
   };
+};
+
+export const addLeadingZero = (value: number) => `0${value}`.slice(-2);
+
+export const createFormattedDateString = ({ month, day, hour, minute }: ReturnType<typeof getDate>) =>
+  `${addLeadingZero(day)} ${MESSAGE_MONTHS[month]} ${addLeadingZero(hour)}:${addLeadingZero(minute)}`;
+
+export const createUrlToResource = (defaultUrl: string, value?: string | null) =>
+  (value ? `${APP_URLS.RESOURCES}${value}` : defaultUrl).toString();
+
+export const setElementByIndex = <A extends Array<E>, E>(array: A, newElement: E, index: number) => {
+  if (index + 1 > array.length && index < 0) {
+    return array;
+  }
+
+  return [...array.slice(0, index), newElement, ...array.slice(index + 1, array.length)];
 };
 
 export const getType = (e: any, low = true) => {
@@ -35,31 +58,8 @@ export const getHTMLElementType = (e: any, low = true) => {
     return low ? tmpResult.toLocaleLowerCase() : tmpResult;
   }
 };
-export const deepAssign = (target: Record<string, any>, ...sources: Record<string, any>[]) => {
-  if (!sources.length) {
-    return target;
-  }
 
-  const source = sources.shift();
-
-  if (getType(target) === 'object' && getType(source) === 'object') {
-    for (const key in source) {
-      if (getType(source[key]) === 'object') {
-        if (!target[key]) {
-          Object.assign(target, { [key]: {} });
-        } else {
-          target[key] = Object.assign({}, target[key]);
-        }
-        deepAssign(target[key], source[key]);
-      } else {
-        Object.assign(target, { [key]: source[key] });
-      }
-    }
-  }
-
-  deepAssign(target, ...sources);
-  return target;
-};
+type AnyObject = { [key: string]: any };
 
 export type PlainObject<T = unknown> = {
   [k in string]: T;
@@ -74,7 +74,35 @@ export const isObject = (variable: unknown): variable is PlainObject => {
   );
 };
 
-export const isEqual = (a: PlainObject, b: PlainObject): boolean => {
+export const deepAssign = (target: AnyObject, ...sources: AnyObject[]): AnyObject => {
+  if (!sources.length) {
+    return target;
+  }
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) {
+          Object.assign(target, { [key]: {} });
+        }
+        deepAssign(target[key] as AnyObject, source[key] as AnyObject);
+      } else if (Array.isArray(source[key])) {
+        if (Array.isArray(target[key])) {
+          target[key] = [...(target[key] as any[]), ...(source[key] as any[])]; // Merge arrays
+        } else {
+          target[key] = [...(source[key] as any[])]; // Copy array if target is not an array
+        }
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return deepAssign(target, ...sources);
+};
+
+export const isEqual = (a: any, b: any): boolean => {
   if (!isObject(a) || !isObject(b)) {
     return a === b;
   }

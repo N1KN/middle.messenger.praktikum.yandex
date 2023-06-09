@@ -2,16 +2,17 @@ import { httpTransport } from 'lib/HTTPTransport';
 import {
   ChatIdDTO,
   ChatResponseDTO,
+  ChatUserResponseDTO,
   CreateChatRequest,
   CreateChatResponse,
   RemoveOrAddUsersToChatRequest,
 } from './types';
 
-export class User {
+export class ChatsApi {
   static readonly basePath = '/chats';
 
-  static async getChats(title?: string) {
-    return httpTransport.get<ChatResponseDTO[]>(`${this.basePath}`, { title });
+  static async getChats() {
+    return httpTransport.get<ChatResponseDTO[]>(`${this.basePath}`, {});
   }
 
   static async createChat(data: CreateChatRequest) {
@@ -20,6 +21,10 @@ export class User {
 
   static async removeChatById(data: ChatIdDTO) {
     return httpTransport.delete(`${this.basePath}`, data);
+  }
+
+  static async getUsersInChat(chatId: number) {
+    return httpTransport.get<ChatUserResponseDTO[]>(`${this.basePath}/${chatId}/users`, {});
   }
 
   static async addUserToChat(data: RemoveOrAddUsersToChatRequest) {
@@ -31,10 +36,6 @@ export class User {
   }
 
   static async getChatToken({ chatId }: ChatIdDTO) {
-    return httpTransport.post(`token/${chatId}`, {});
-  }
-
-  static async getUserForChat({ chatId }: ChatIdDTO) {
-    return httpTransport.get(`${this.basePath}/${chatId}/users`);
+    return httpTransport.post<{ token: string }>(`${this.basePath}/token/${chatId}`, {});
   }
 }

@@ -1,4 +1,4 @@
-import { AppContainer } from 'containers/app';
+import { RouteNames } from 'constants/router';
 import { Block, IBlockProps } from 'lib/block';
 import { AccountPage } from 'pages/account';
 import { ChangePassword } from 'pages/change-password';
@@ -8,115 +8,86 @@ import { NotFoundPage } from 'pages/not-found';
 import { SignInPage } from 'pages/sign-in';
 import { SignUpPage } from 'pages/sign-up';
 import { SiteMap } from 'pages/site-map';
-import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouteNames } from 'utils/router';
+import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouterInstance } from 'utils/router';
+import { AuthControllerInstance } from './controllers';
 
 import './styles.pcss';
+import { store } from './store';
 
 (() => {
   // @ts-ignore
   window.EVENTS_ON_ELEMENT = [];
 
-  const getPageByRouteName = (routeName: RouteNames): Block => {
-    const PAGES: Record<RouteNames, { component: typeof Block<IBlockProps<any>>; props: any }> = {
-      [RouteNames.ROOT_PAGE]: { component: SiteMap, props: {} },
-      [RouteNames.SIGN_IN]: { component: SignInPage, props: {} },
-      [RouteNames.SIGN_UP]: { component: SignUpPage, props: {} },
-      [RouteNames.ACCOUNT]: { component: AccountPage, props: {} },
-      [RouteNames.ACCOUNT_EDIT]: { component: AccountPage, props: { isEditMode: true } },
-      [RouteNames.CHANGE_PASSWORD]: { component: ChangePassword, props: {} },
-      [RouteNames.CHATS]: { component: ChatsPage, props: {} },
-      [RouteNames.NOT_FOUND]: { component: NotFoundPage, props: {} },
-      [RouteNames.INTERNAL_ERROR]: { component: InternalErrorPage, props: {} },
-    };
-
-    const { props, component: Component } = PAGES[routeName];
-    return new Component(props);
+  const PAGES: Record<RouteNames, { component: typeof Block<IBlockProps<any>>; props: any }> = {
+    [RouteNames.ROOT_PAGE]: { component: SignInPage, props: {} },
+    [RouteNames.SIGN_IN]: { component: SignInPage, props: {} },
+    [RouteNames.SIGN_UP]: { component: SignUpPage, props: {} },
+    [RouteNames.SITE_MAP]: { component: SiteMap, props: {} },
+    [RouteNames.ACCOUNT]: { component: AccountPage, props: {} },
+    [RouteNames.ACCOUNT_EDIT]: { component: AccountPage, props: { isEditMode: true } },
+    [RouteNames.CHANGE_PASSWORD]: { component: ChangePassword, props: {} },
+    [RouteNames.CHATS]: { component: ChatsPage, props: {} },
+    [RouteNames.NOT_FOUND]: { component: NotFoundPage, props: {} },
+    [RouteNames.INTERNAL_ERROR]: { component: InternalErrorPage, props: {} },
   };
 
-  const rootElement = document.querySelector('#root');
-  const initialUrl = document.location.href;
+  const protectedRoutes = (Object.keys(PAGES) as RouteNames[]).filter(
+    (route) =>
+      ![RouteNames.SIGN_UP, RouteNames.SIGN_IN, RouteNames.NOT_FOUND, RouteNames.INTERNAL_ERROR].includes(route),
+  );
 
-  const renderPage = (url: string) => {
-    // const isRoot = getHashUrlFromUrl(url) === '/';
+  Object.entries(PAGES).forEach(([routeName, { component, props }]) => {
+    RouterInstance.use(getUrlByRoute(routeName as RouteNames), component, props);
+  });
 
-    const routeName = getRouteByUrlOrNotFoundRoute(url);
+  RouterInstance.useAsNotFoundRoute(getUrlByRoute(RouteNames.NOT_FOUND), NotFoundPage, {});
 
-    // Редирект на страницу входа.
-    // if (isRoot) {
-    //   location.hash = getUrlByRoute(RouteNames.SIGN_IN);
-    //   return;
-    // }
+  document.addEventListener(
+    'DOMContentLoaded',
+    () => {
+      RouterInstance.start();
 
-    // Редирект на страницу ошибки.
-    if (!routeName) {
-      location.hash = getUrlByRoute(RouteNames.NOT_FOUND);
-      return;
-    }
+      // @ts-ignore
+      window._RI = RouterInstance;
 
-    if (!rootElement) {
-      throw new Error(`Root element is not found`);
-    }
+      store.subscribe((state) => {
+        const { isLoggedIn, authChecked } = state.auth;
 
-    const pageComp = getPageByRouteName(routeName);
+        if (authChecked) {
+          const route = getRouteByUrlOrNotFoundRoute(window.location.pathname, true);
 
-    const appContainerBlock = new AppContainer({
-      page: pageComp,
-    });
+          if (protectedRoutes.includes(route) && !isLoggedIn) {
+            setTimeout(() => RouterInstance.goByRouteName(RouteNames.ROOT_PAGE), 1);
+          }
+        }
+      });
 
-    rootElement.replaceChildren(appContainerBlock.getContent());
-    appContainerBlock.emitComponentDidMount();
-  };
-
-  const handleRouting = (event: HashChangeEvent) => {
-    renderPage(event.newURL);
-  };
-
-  document.addEventListener('DOMContentLoaded', () => renderPage(initialUrl), { once: true });
-  window.addEventListener('hashchange', handleRouting);
+      setTimeout(() => AuthControllerInstance.getUserInfo(), 1);
+    },
+    { once: true },
+  );
 })();
 
 (() => {
-  const isEl = function <T>(el: T): el is T & Omit<Element, 'attributes'> {
-    return (el as unknown as Element)?.attributes !== undefined;
+  const isAnchorEl = function <T>(el: T): el is T & Omit<Element, 'attributes' | 'tagName'> {
+    return (el as unknown as Element)?.attributes !== undefined && (el as unknown as Element).tagName === 'A';
   };
 
   // Перехватываем и отключаем все события отправки(до следующего спринта)
-  // TODO: Реализовать обработку событий отправки форм.
-  document.addEventListener('submit', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    return false;
-  });
+  // document.addEventListener('submit', (e) => {
+  // e.stopPropagation();
+  // e.preventDefault();
+  // return false;
+  // });
 
-  document.addEventListener('click', (e) => {
-    if (isEl(e.target)) {
-      //TODO: После подключения авторизации и событий убрать.
-      // Переходим в чаты
-      if (e.target.getAttribute('id') === 'authButton') {
-        location.hash = getUrlByRoute(RouteNames.CHATS);
-      }
+  document.addEventListener('click', function (event) {
+    const target = event.target as HTMLAnchorElement;
 
-      //TODO: После подключения авторизации и событий убрать.
-      // Переходим в чаты
-      if (e.target.getAttribute('id') === 'regButton') {
-        location.hash = getUrlByRoute(RouteNames.CHATS);
-      }
+    if (isAnchorEl(target)) {
+      event.preventDefault();
+      event.stopPropagation();
 
-      //TODO: После подключения авторизации и событий убрать.
-      // Переходим в данные об аккаунте
-      if (e.target.getAttribute('id') === 'saveAccountButton') {
-        location.hash = getUrlByRoute(RouteNames.ACCOUNT);
-      }
-
-      //TODO: После подключения авторизации и событий убрать.
-      // Переходим в данные об аккаунте
-      if (e.target.getAttribute('id') === 'savePasswordButton') {
-        location.hash = getUrlByRoute(RouteNames.ACCOUNT);
-      }
-      e.stopPropagation();
-      return false;
+      RouterInstance.go(target.getAttribute('href') || '/');
     }
-
-    return false;
   });
 })();

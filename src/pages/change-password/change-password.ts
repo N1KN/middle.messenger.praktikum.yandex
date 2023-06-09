@@ -1,10 +1,12 @@
+import { RouteNames } from 'constants/router';
 import { Button } from 'components/button';
 import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
 import { TextField } from 'components/text-field';
+import { UserControllerInstance } from 'controllers/user-controller';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { getUrlByRoute } from 'utils/router';
 import { createTextValidator, validateMaxLength, validateMinLength, validatePassword } from 'utils/validators';
 
 import './styles.pcss';
@@ -12,7 +14,7 @@ import './styles.pcss';
 const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
 
 const cnChangePassword = cn('ChangePassword');
-const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT_EDIT);
+const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT);
 
 const passwordValidator = createTextValidator(validatePassword, validateMinLength(8), validateMaxLength(40));
 
@@ -42,20 +44,23 @@ export class ChangePassword extends Block {
       },
     });
     this.resetFormListeners();
-    // TODO: Реализовать работу с сервером
-    // eslint-disable-next-line no-console
-    this._formHandler.subscribeSubmit((data) => console.log('ChangePassword.onFormSubmit', data));
+    this._formHandler.subscribeSubmit((data) => {
+      UserControllerInstance.updatePassword({
+        oldPassword: data.old_password,
+        newPassword: data.new_password,
+      });
+    });
   }
 
   render() {
     const template = `
         <form class="${cnChangePassword()}">
-            <div class="${cnChangePassword('headerContent')}">
+            <!--div class="${cnChangePassword('headerContent')}">
                 <div class="${cnChangePassword('changeAvatar')}">
                     <img src="${avatarUrl}" alt="Аватар по умолчанию" />
                     <div class="${cnChangePassword('changeAvatarText')}">Поменять аватар</div>
                 </div>
-            </div>
+            </div-->
 
             <div class="${cnChangePassword('bodyContent')}">
                 {{{oldPassword}}}
@@ -99,14 +104,16 @@ export class ChangePassword extends Block {
       }),
     };
 
-    fragment.replaceChildren(
-      new PageWrapperWithBackButton({
-        children,
-        pageContentTemplate: template,
-        backBtnUrl: accountEditLink,
-        backBtnLabel: 'К редактированию аккаунта',
-      }).getContent(),
-    );
+    const blockInstance = new PageWrapperWithBackButton({
+      children,
+      pageContentTemplate: template,
+      backBtnUrl: accountEditLink,
+      backBtnLabel: 'К редактированию аккаунта',
+    });
+
+    fragment.replaceChildren(blockInstance.getContent());
+
+    blockInstance.emitComponentDidMount();
 
     return fragment;
   }

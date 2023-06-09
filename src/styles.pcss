@@ -22,6 +22,8 @@
   --element-primary-color: #3369f3;
   --element-secondary-color: #efefef;
   --element-thirdty-color: #f8f8f8;
+  --element-error-color: #ff2f2f;
+  --element-success-color: #44b109;
 
   /* Element Colors */
 
@@ -45,6 +47,10 @@ body {
 
 #root {
   font: var(--font-primary);
+
+  & .force-hidden {
+    display: none !important;
+  }
 }
 
 html,
@@ -62,4 +68,30 @@ body,
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+#tooltip-root .Tooltip {
+  cursor: pointer;
+  color: var(--text-invert-color);
+  border-radius: 3px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  transition: opacity .3s;
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+
+  &:hover {
+    opacity: .75;
+  }
+
+  &-success {
+    background-color: var(--element-success-color);
+  }
+
+  &-error {
+    background-color: var(--element-error-color);
+  }
 }

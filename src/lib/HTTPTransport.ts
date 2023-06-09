@@ -1,4 +1,4 @@
-import { API_URL } from 'constants';
+import { APP_URLS } from 'constants';
 import { getType, queryStringify } from 'utils/common';
 
 enum Methods {
@@ -12,17 +12,17 @@ enum Methods {
 type RequestOptions = {
   headers?: Record<string, string>;
   method?: Methods;
-  withCredentials?: boolean;
+  withoutCredentials?: boolean;
 };
 
-type HTTPTransportError = {
+export type HTTPTransportError = {
   reason: string;
   info?: string;
   statusCode: number;
 };
 
-type HTTPTransportResponse<T = void> = {
-  response: T;
+export type HTTPTransportResponse<T = void> = {
+  data: T;
   statusCode: number;
 };
 
@@ -59,16 +59,16 @@ export class HTTPTransport {
     options: RequestOptions = {},
   ): Promise<HTTPTransportResponse<R> | HTTPTransportError> {
     return new Promise((resolve, reject) => {
-      const { headers, method = Methods.GET, withCredentials } = options;
+      const { headers, method = Methods.GET, withoutCredentials } = options;
 
       const xhr = new XMLHttpRequest();
       const query = method === Methods.GET && !!data ? `${queryStringify(data)}` : '';
 
       const fullUrl = `${this.baseUrl}${url}${query.length > 0 ? `?${query}` : ''}`;
 
-      xhr.open(method, fullUrl);
+      xhr.open(method, fullUrl, true);
 
-      xhr.withCredentials = Boolean(withCredentials);
+      xhr.withCredentials = !withoutCredentials;
 
       if (headers) {
         Object.entries(headers).forEach(([key, value]) => {
@@ -78,7 +78,12 @@ export class HTTPTransport {
 
       xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
-          resolve({ response: xhr.response as unknown as R, statusCode: xhr.status });
+          const contentType = xhr.getResponseHeader('Content-Type')?.toLowerCase();
+          if (contentType && contentType.indexOf('application/json') !== -1) {
+            resolve({ data: JSON.parse(xhr.response) as unknown as R, statusCode: xhr.status });
+          } else {
+            resolve({ data: xhr.response as unknown as R, statusCode: xhr.status });
+          }
         } else if (getType(xhr.response) === 'string' && xhr.response.length > 0) {
           const jsonResponse = JSON.parse(xhr.response);
           reject({ reason: 'server_reason', info: jsonResponse.reason, statusCode: xhr.status });
@@ -91,17 +96,23 @@ export class HTTPTransport {
       xhr.ontimeout = () => reject({ reason: 'timeout', info: xhr.statusText });
       xhr.onerror = () => reject({ reason: 'network_error', info: xhr.statusText });
 
+      let fixedData = data;
       if (!(data instanceof FormData)) {
         xhr.setRequestHeader('Content-Type', 'application/json');
+        fixedData = JSON.stringify(data);
       }
 
-      if (method === Methods.GET || !data) {
-        xhr.send();
-      } else {
-        xhr.send(data);
+      try {
+        if (method === Methods.GET || !data) {
+          xhr.send();
+        } else {
+          xhr.send(fixedData);
+        }
+      } catch (e) {
+        console.error(e);
       }
     });
   }
 }
 
-export const httpTransport = new HTTPTransport(API_URL);
+export const httpTransport = new HTTPTransport(APP_URLS.API);

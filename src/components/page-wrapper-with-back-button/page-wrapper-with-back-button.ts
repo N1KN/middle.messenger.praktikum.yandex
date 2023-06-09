@@ -1,5 +1,6 @@
 import { Block, IBlockProps } from 'lib/block';
 import { cn } from 'utils/bem';
+import { RouterInstance } from 'utils/router';
 
 import './styles.pcss';
 
@@ -14,16 +15,25 @@ const cnPageWrapperWithBackButton = cn('PageWrapperWithBackButton');
 
 export class PageWrapperWithBackButton extends Block<PageWrapperWithBackButtonProps> {
   constructor(props: IBlockProps<PageWrapperWithBackButtonProps>) {
-    super(props);
+    const events: IBlockProps['events'] = {
+      click: (e: MouseEvent) => {
+        if ((e.composedPath() as HTMLElement[]).some((el) => el.getAttribute?.('id') === 'backBtn')) {
+          e.stopPropagation();
+          RouterInstance.go(this.props.backBtnUrl);
+        }
+      },
+    };
+
+    super({ ...props, events });
   }
 
   render() {
-    const { pageContentTemplate, backBtnUrl, backBtnLabel } = this.props;
+    const { pageContentTemplate, backBtnLabel } = this.props;
     const ariaLabelAttr = backBtnLabel ? `aria-label="{{{backBtnLabel}}}"` : '';
 
     const template = `
     <div class="${cnPageWrapperWithBackButton()}">
-        <a class="${cnPageWrapperWithBackButton('backButtonWrapper')}" href="{{backBtnUrl}}" ${ariaLabelAttr}>
+        <a id="backBtn" class="${cnPageWrapperWithBackButton('backButtonWrapper')}" href="#" ${ariaLabelAttr}>
             <div class="${cnPageWrapperWithBackButton('backButton')}"></div>
         </a>
         <main class="${cnPageWrapperWithBackButton('pageWrapper')}">
@@ -33,7 +43,6 @@ export class PageWrapperWithBackButton extends Block<PageWrapperWithBackButtonPr
 
     return this.compile(template, {
       ...this.props,
-      backBtnUrl,
       backBtnLabel,
     });
   }

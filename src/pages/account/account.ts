@@ -1,12 +1,21 @@
+import { RouteNames } from 'constants/router';
+import { UserResponseDTO } from 'api/user/types';
 import { Button } from 'components/button';
 import { Divider } from 'components/divider';
+import { EditAvatar } from 'components/edit-avatar';
 import { LinkButton } from 'components/link-button';
 import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
+import Popup from 'components/popup';
 import { TextField } from 'components/text-field';
+import { AuthControllerInstance } from 'controllers';
+import { UserControllerInstance } from 'controllers/user-controller';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { store } from 'store';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { createUrlToResource } from 'utils/common';
+import { getUrlByRoute } from 'utils/router';
+import { showTooltip } from 'utils/tooltip';
 import {
   createTextValidator,
   validateLogin,
@@ -23,7 +32,12 @@ type AccountPageProps = {
   isEditMode?: boolean;
 };
 
-const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
+type AccountPageState = {
+  user?: UserResponseDTO | null;
+  changeAvatarPopup: Popup;
+};
+
+const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
 
 const cnAccountPage = cn('AccountPage');
 const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT_EDIT);
@@ -34,14 +48,53 @@ const chatsLink = getUrlByRoute(RouteNames.CHATS);
 
 const loginValidator = createTextValidator(validateLogin, validateMinLength(3), validateMaxLength(20));
 
-export class AccountPage extends Block<AccountPageProps> {
+export class AccountPage extends Block<AccountPageProps, AccountPageState> {
   private _formHandler?: FormHandler;
   constructor(props: AccountPageProps) {
     super(props, 'form');
   }
 
+  protected init() {
+    this.state.user = store.getState().user.userInfo!;
+    const unsubscribe = store.subscribe((state) => {
+      this.state.user = state.user.userInfo!;
+    });
+
+    this.addToUnmountQueue(unsubscribe);
+
+    this.state.changeAvatarPopup = new Popup({
+      title: 'Загрузить новый аватар?',
+      button: new Button({
+        label: 'Загрузить',
+        isSubmit: true,
+      }),
+      content: [
+        new TextField({
+          title: 'Выберите картинку',
+          type: 'file',
+          name: 'avatarFile',
+        }),
+      ],
+      onClose: () => {
+        (this.state.changeAvatarPopup as Block).hide();
+      },
+      onSubmit: (data) => {
+        const formData = new FormData();
+        formData.append('avatar', data.avatarFile);
+
+        UserControllerInstance.updateAvatar(formData).then(() => {
+          (this.state.changeAvatarPopup as Block).hide();
+          showTooltip({
+            message: 'Аватар загружен',
+            type: 'success',
+          });
+        });
+      },
+    });
+  }
+
   private resetFormListeners() {
-    const form = this.element.querySelector('form');
+    const form = this.element.querySelector('form#account');
     if (form instanceof HTMLFormElement) {
       this._formHandler?.removeListeners(form);
       this._formHandler?.setListeners(form);
@@ -50,7 +103,7 @@ export class AccountPage extends Block<AccountPageProps> {
 
   componentDidMount() {
     this._formHandler = new FormHandler({
-      form: this.element.querySelector('form')!,
+      form: this.element.querySelector('form#account')!,
       validators: {
         email: validateEmail,
         phone: validatePhone,
@@ -61,9 +114,10 @@ export class AccountPage extends Block<AccountPageProps> {
       },
     });
     this.resetFormListeners();
-    // TODO: Реализовать работу с сервером
-    // eslint-disable-next-line no-console
-    this._formHandler.subscribeSubmit((data) => console.log('AccountEdit.onFormSubmit', data));
+
+    this._formHandler.subscribeSubmit((data) => {
+      UserControllerInstance.updateUser(data);
+    });
   }
 
   render() {
@@ -106,6 +160,14 @@ export class AccountPage extends Block<AccountPageProps> {
           className: cnAccountPage('linkButton', { isExit: true }),
           text: 'Выйти',
           url: accountExitLink,
+          events: {
+            click: (e: MouseEvent) => {
+              e.stopPropagation();
+              AuthControllerInstance.logout();
+
+              return;
+            },
+          },
         }),
         divider1: new Divider({
           className: cnAccountPage('divider'),
@@ -117,56 +179,70 @@ export class AccountPage extends Block<AccountPageProps> {
     }
 
     const template = `
-        <form class="${cnAccountPage()}">
-            <div class="${cnAccountPage('headerContent')}">
-                <div class="${cnAccountPage('changeAvatar')}">
-                    <img src="${avatarUrl}" alt="Аватар по умолчанию" />
-                    <div class="${cnAccountPage('changeAvatarText')}">Поменять аватар</div>
-                </div>
-                <p class="${cnAccountPage('userName', { isEditMode })}">Login</p>
-            </div>
+        <div>
+           <form id="account" class="${cnAccountPage()}">
+              <div class="${cnAccountPage('headerContent')}">
+                  {{{changeAvatar}}}
+                  <!--div class="${cnAccountPage('changeAvatar')}">
+                      <img src="${avatarUrl}" alt="Аватар по умолчанию" />
+                      <div class="${cnAccountPage('changeAvatarText')}">Поменять аватар</div>
+                  </div-->
+                  <p class="${cnAccountPage('userName', { isEditMode })}">Login</p>
+              </div>
 
-            <div class="${cnAccountPage('bodyContent')}">
-                {{{mailInput}}}
-                {{{loginInput}}}
-                {{{firstNameInput}}}
-                {{{secondNameInput}}}
-                {{{displayNameInput}}}
-                {{{phoneInput}}}
-            </div>
-            <div class="${cnAccountPage('footerContent')}">
-                ${footerContent}
-            </div>
-        </form>`;
+              <div class="${cnAccountPage('bodyContent')}">
+                  {{{mailInput}}}
+                  {{{loginInput}}}
+                  {{{firstNameInput}}}
+                  {{{secondNameInput}}}
+                  {{{displayNameInput}}}
+                  {{{phoneInput}}}
+              </div>
+              <div class="${cnAccountPage('footerContent')}">
+                  ${footerContent}
+              </div>
+           </form>
+           {{{changeAvatarPopup}}}
+        </div>`;
+
+    const userState = this.state.user;
 
     const children = {
+      changeAvatar: new EditAvatar({
+        className: cnAccountPage('changeAvatar'),
+        avatarUrl: createUrlToResource(avatarUrl, userState?.avatar),
+        onClick: () => {
+          this.state.changeAvatarPopup.show();
+        },
+      }),
+      changeAvatarPopup: this.state.changeAvatarPopup,
       mailInput: new TextField({
         ...textFieldCfg,
         title: 'Почта',
         name: 'email',
         type: 'email',
-        value: 'mail@ya.ru',
+        value: userState?.email,
         errorText: 'Введите корректный адрес почты.',
       }),
       loginInput: new TextField({
         ...textFieldCfg,
         title: 'Логин',
         name: 'login',
-        value: 'Login',
+        value: userState?.login,
         errorText: 'Требование: 3-20 символов, латиница, должен начинаться с буквы, может включать цифры.',
       }),
       firstNameInput: new TextField({
         ...textFieldCfg,
         title: 'Имя',
         name: 'first_name',
-        value: 'FirstName',
+        value: userState?.first_name,
         errorText: 'Требование: Только латиница или кириллица, первая буква должна быть заглавной, возможен дефис.',
       }),
       secondNameInput: new TextField({
         ...textFieldCfg,
         title: 'Фамилия',
         name: 'second_name',
-        value: 'SecondName',
+        value: userState?.second_name,
         errorText: 'Требование: Только латиница или кириллица, первая буква должна быть заглавной, возможен дефис.',
       }),
       phoneInput: new TextField({
@@ -174,13 +250,14 @@ export class AccountPage extends Block<AccountPageProps> {
         title: 'Телефон',
         name: 'phone',
         type: 'tel',
-        value: '79876543210',
+        value: userState?.phone,
         errorText: 'Введите корректный номер телефона.',
       }),
       displayNameInput: new TextField({
         ...textFieldCfg,
         title: 'Имя в чате',
         name: 'display_name',
+        value: userState?.display_name ?? '',
         errorText: 'Требование: 3-20 символов, латиница, должен начинаться с буквы, может включать цифры.',
       }),
       ...footerButtons,
@@ -188,14 +265,16 @@ export class AccountPage extends Block<AccountPageProps> {
 
     const fragment = new DocumentFragment();
 
-    fragment.replaceChildren(
-      new PageWrapperWithBackButton({
-        pageContentTemplate: template,
-        children,
-        backBtnUrl: isEditMode ? accountLink : chatsLink,
-        backBtnLabel: isEditMode ? 'К чатам' : 'К данным об аккаунте',
-      }).getContent(),
-    );
+    const blockInstance = new PageWrapperWithBackButton({
+      pageContentTemplate: template,
+      children,
+      backBtnUrl: isEditMode ? accountLink : chatsLink,
+      backBtnLabel: isEditMode ? 'К чатам' : 'К данным об аккаунте',
+    });
+
+    fragment.replaceChildren(blockInstance.getContent());
+
+    blockInstance.emitComponentDidMount();
 
     return fragment;
   }

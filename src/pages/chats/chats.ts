@@ -1,95 +1,126 @@
+import { RouteNames } from 'constants/router';
+import { Button } from 'components/button';
 import { ChatListItem } from 'components/chat-list-item';
 import { DialogArea } from 'components/dialog-area';
 import { LinkButton } from 'components/link-button';
-import { Block } from 'lib/block';
+import Popup from 'components/popup';
+import { TextField } from 'components/text-field';
+import { ChatsControllerInstance } from 'controllers/chat-controller';
+import { Block, IBlockProps, OnUpdateProps } from 'lib/block';
+import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { isNotNil } from 'utils/common';
+import { getUrlByRoute } from 'utils/router';
+import { showTooltip } from 'utils/tooltip';
 
 import './styles.pcss';
+
+type ChatsPageState = {
+  selectedChat: RootState[RootDucks.CHATS]['chats'][number] | null;
+  chats: RootState[RootDucks.CHATS]['chats'];
+  user: RootState[RootDucks.USER]['userInfo'];
+};
 
 const searchIconUrl = new URL('/src/static/img/search.svg', import.meta.url);
 
 const cnChatsPage = cn('ChatsPage');
 const accountLink = getUrlByRoute(RouteNames.ACCOUNT);
 
-export class ChatsPage extends Block {
+export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
+  constructor() {
+    super();
+    this.state.chats = [];
+    this.state.selectedChat = null;
+    this.state.user = null;
+  }
   protected init() {
+    ChatsControllerInstance.fetchChats();
+
+    const unsubscribe = store.subscribe((state) => {
+      this.state.chats = state.chats.chats;
+      const selectedChat = state.chats.chats.find((chat) => chat.id === state.chats.selectedChatId);
+
+      this.state.selectedChat = selectedChat ?? null;
+      this.state.user = state.user.userInfo;
+    });
+
+    this.addToUnmountQueue(unsubscribe);
+
     this.children = {
       profileBtn: new LinkButton({
         url: accountLink,
         text: 'Профиль >',
       }),
-      chatItem: [
-        new ChatListItem({
-          className: cnChatsPage('chatItem'),
-          chatId: '111',
-          title: 'Title',
-        }),
-        new ChatListItem({
-          className: cnChatsPage('chatItem'),
-          chatId: '222',
-          title: 'Title2',
-        }),
-        new ChatListItem({
-          className: cnChatsPage('chatItem'),
-          chatId: '333',
-          title: 'Title3',
-          lastMessage: 'Ку-ку :)',
-          lastMsgTime: '03:40',
-          unreadCount: 2,
-        }),
-        new ChatListItem({
-          className: cnChatsPage('chatItem'),
-          chatId: '444',
-          title: 'Title4',
-          lastMessage: 'Моё очень длинное сообщение.',
-          youLast: true,
-          lastMsgTime: 'Вчера',
-        }),
-        new ChatListItem({
-          className: cnChatsPage('chatItem'),
-          chatId: '555',
-          title: 'Title5',
-        }),
-      ],
+      addChatButton: new Button({
+        label: '+ Чат',
+        onClick: () => {
+          (this.children.newChatPopup as Block).show();
+        },
+        isSubmit: false,
+      }),
+      chatItems: [],
       dialogArea: new DialogArea({
-        chatId: '123',
-        title: 'Чат',
+        chatId: null,
+        title: null,
         avatar: null,
-        messages: [
-          {
-            id: 1,
-            chat_id: 0,
-            user_id: 0,
-            time: new Date(-10000).toISOString(),
-            is_read: true,
-            content: 'Привет',
-            type: '',
-            file: null,
-          },
-          {
-            id: 2,
-            chat_id: 0,
-            user_id: 2,
-            time: new Date(-8000).toISOString(),
-            is_read: true,
-            content: 'Привет',
-            type: '',
-            file: null,
-          },
-          {
-            id: 3,
-            chat_id: 0,
-            user_id: 0,
-            time: new Date(-1000).toISOString(),
-            is_read: false,
-            content: 'Как дела?',
-            type: '',
-            file: null,
-          },
-        ],
+        // messages: [],
       }),
     };
+
+    this.children.newChatPopup = new Popup({
+      title: 'Создать новый чат?',
+      button: new Button({
+        label: 'Создать',
+        isSubmit: true,
+      }),
+      content: [
+        new TextField({
+          title: 'Имя нового чата',
+          type: 'text',
+          name: 'chatName',
+        }),
+      ],
+      onClose: () => {
+        (this.children.newChatPopup as Block).hide();
+      },
+      onSubmit: (data) => {
+        ChatsControllerInstance.create(data.chatName).then(() => {
+          (this.children.newChatPopup as Block).hide();
+          showTooltip({
+            message: 'Чат создан',
+            type: 'success',
+          });
+        });
+      },
+    });
+  }
+
+  componentDidUpdate({ oldTarget, target, type }: OnUpdateProps): boolean {
+    if (type === Block.UPDATE_EVENTS.STATE) {
+      const onItemClick = (chatId: number) => ChatsControllerInstance.selectChat(chatId);
+
+      this.children.chatItems = this.state.chats.map(
+        (chatItem) =>
+          new ChatListItem({
+            className: cnChatsPage('chatItem'),
+            avatar: chatItem.avatar,
+            onClick: onItemClick,
+            isActive: isNotNil(this.state.selectedChat?.id) && this.state.selectedChat?.id === chatItem.id,
+            chatId: chatItem.id,
+            userLogin: this.state.user?.login ?? '',
+            title: chatItem.title,
+            lastMessage: chatItem.last_message,
+          }),
+      );
+
+      (this.children.dialogArea as DialogArea).setProps({
+        chatId: this.state.selectedChat?.id,
+        avatar: this.state.selectedChat?.avatar,
+        title: this.state.selectedChat?.title,
+      });
+    }
+
+    return super.componentDidUpdate({ oldTarget, target, type });
   }
 
   protected render(): DocumentFragment {
@@ -98,17 +129,18 @@ export class ChatsPage extends Block {
       <aside class="${cnChatsPage('leftBlock')}">
         <header class="${cnChatsPage('chatListHeader')}">
             <div class="${cnChatsPage('profileBtnWrapper')}">
+            {{{addChatButton}}}
             {{{profileBtn}}}
             </div>
-            <form class="${cnChatsPage('chatSearchWrapper')}">
+            <div class="${cnChatsPage('chatSearchWrapper')}">
               <div class="${cnChatsPage('chatSearch')}">
                 <input name="search_chat" type="text" placeholder="Поиск">
                 <img src="${searchIconUrl}" alt="Поиск по чату">
               </div>
-            </form>
+            </div>
         </header>
         <div class="${cnChatsPage('chatList')}">
-            {{#each chatItem}}
+            {{#each chatItems}}
                 {{{this}}}
             {{/each}}
         </div>
@@ -116,6 +148,7 @@ export class ChatsPage extends Block {
       <main class="${cnChatsPage('rightBlock')}">
       {{{dialogArea}}}
       </main>
+      {{{newChatPopup}}}
     </div>`;
 
     return this.compile(template, {});

@@ -1,0 +1,60 @@
+.Popup {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: block;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+
+  &-overlay {
+    background-color: var(--color-bg-invert);
+    opacity: 0.8;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-window {
+    width: 310px;
+    min-height: 210px;
+    background-color: var(--color-bg-default);
+    padding: 40px 30px 36px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    gap: 20px;
+  }
+
+  &-title {
+    margin: 0;
+    font-weight: 300;
+    color: var(--text-primary-color);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  &-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+}
+
+/*input[type='file' i]::-webkit-file-upload-button {
+  border-radius: @border-radius;
+  border: none;
+  margin: 0 10px;
+  color: @color-blue;
+  background-color: transparent;
+}
+*/

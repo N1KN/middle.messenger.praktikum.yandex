@@ -6,6 +6,7 @@ import { getHTMLElementType } from 'utils/common';
 
 type Validator = (text: string) => boolean;
 type ValidateFormConfig = {
+  onlyConfiguredKeys?: boolean;
   form: HTMLFormElement;
   validators?: {
     [key: string]: Validator;
@@ -22,6 +23,7 @@ export class FormHandler {
   private readonly _equalityMap!: Required<ValidateFormConfig>['equality'];
   private readonly _nameValidityMap: Map<string, boolean> = new Map();
   private _formKeys: string[] = [];
+  private _onlyConfiguredKeys = true;
 
   constructor(props: ValidateFormConfig) {
     // const {form, ...otherProps} = props
@@ -38,6 +40,8 @@ export class FormHandler {
 
     this._formKeys = Array.from(formKeys.values());
     this._formKeys.forEach((key) => this._nameValidityMap.set(key, false));
+
+    this._onlyConfiguredKeys = props.onlyConfiguredKeys ?? true;
 
     // FormHandler.__instance = this;
 
@@ -66,10 +70,10 @@ export class FormHandler {
   };
 
   protected _formSubmitHandler = (e: SubmitEvent) => {
-    if (e.target instanceof HTMLFormElement) {
+    if (e.target instanceof HTMLFormElement || e.composedPath().includes(this._form)) {
       e.stopPropagation();
       e.preventDefault();
-      this._onSubmit(e.target);
+      this._onSubmit(this._form);
     }
   };
 
@@ -113,12 +117,13 @@ export class FormHandler {
     }
 
     const formData = new FormData(form);
-    const onlyConfiguredEntries = Array.from(formData.entries()).filter(([key]) => this._formKeys.includes(key)) as [
-      string,
-      string,
-    ][];
+    let entries: [string, string][] = Array.from(formData.entries()) as [string, string][];
 
-    this._eventBus().emit(FormHandler.eventName, Object.fromEntries(onlyConfiguredEntries));
+    if (this._onlyConfiguredKeys) {
+      entries = entries.filter(([key]) => this._formKeys.includes(key));
+    }
+
+    this._eventBus().emit(FormHandler.eventName, Object.fromEntries(entries));
   }
 
   private _isValidInput(inputElement: HTMLInputElement) {

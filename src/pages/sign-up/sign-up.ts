@@ -1,10 +1,13 @@
+import { RouteNames } from 'constants/router';
 import { Button } from 'components/button';
 import { LinkButton } from 'components/link-button';
 import { TextField } from 'components/text-field';
+import { AuthControllerInstance } from 'controllers';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { store } from 'store';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { getUrlByRoute, RouterInstance } from 'utils/router';
 import {
   createTextValidator,
   validateLogin,
@@ -35,6 +38,14 @@ export class SignUpPage extends Block {
   }
 
   protected init() {
+    const unsubscribe = store.subscribe((state) => {
+      if (state.auth.isLoggedIn) {
+        RouterInstance.goByRouteName(RouteNames.CHATS);
+      }
+    });
+
+    this.addToUnmountQueue(unsubscribe);
+
     this.children = {
       mailInput: new TextField({
         title: 'Почта',
@@ -103,9 +114,9 @@ export class SignUpPage extends Block {
       },
     });
     this.resetFormListeners();
-    // TODO: Реализовать работу с сервером
-    // eslint-disable-next-line no-console
-    this._formHandler.subscribeSubmit((data) => console.log('SignUp.onFormSubmit', data));
+    this._formHandler.subscribeSubmit((data) => {
+      AuthControllerInstance.signUp(data);
+    });
   }
 
   render() {

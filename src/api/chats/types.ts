@@ -1,4 +1,4 @@
-import { UserResponseDTO } from '../user/types';
+import { UserResponseDTO } from 'api/user/types';
 
 export type CreateChatRequest = {
   title: string;
@@ -23,7 +23,7 @@ export type ChatResponseDTO = {
   avatar?: string | null;
   unread_count: number;
   last_message?: {
-    user: UserResponseDTO;
+    user: Omit<UserResponseDTO, 'id'>;
     time: string;
     content: string;
   } | null;
@@ -38,4 +38,8 @@ export type MessageDTO = {
   is_read: boolean;
   file: null | File;
   content: string;
+};
+
+export type ChatUserResponseDTO = UserResponseDTO & {
+  role: 'regular' | 'admin';
 };
