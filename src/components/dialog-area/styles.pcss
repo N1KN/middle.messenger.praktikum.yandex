@@ -28,7 +28,7 @@
     height: 100%;
     left: 0;
     top: 0;
-    z-index: 2;
+    z-index: 100;
     justify-content: center;
     align-items: center;
     display: block;
@@ -44,7 +44,7 @@
   }
 
   &-chatMenu {
-    z-index: 3;
+    z-index: 200;
     display: none;
     top: 75px;
     right: 10px;
@@ -97,6 +97,7 @@
   }
 
   &-footer {
+    background-color: var(--color-bg-default);
     z-index: 2;
     padding-top: 11px;
     border-top: 1px solid var(--color-bg-border);

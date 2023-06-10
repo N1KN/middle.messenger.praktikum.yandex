@@ -1,5 +1,5 @@
 import { ChatsApi } from 'api/chats';
-import { HTTPTransportError } from 'lib/HTTPTransport';
+import { HTTPTransportError } from 'lib/http-transport';
 import { store } from 'store';
 import { setChats, setSelectedChatId, setUsersInSelectedChat } from 'store/chats/actions';
 import { GetFirstParameter } from 'types/common';

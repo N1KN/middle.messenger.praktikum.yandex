@@ -1,5 +1,5 @@
-import { APP_URLS } from 'constants';
 import { ChatResponseDTO } from 'api/chats/types';
+import { APP_URLS } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Button } from 'components/button';
 import { DialogForm } from 'components/dialog-form';

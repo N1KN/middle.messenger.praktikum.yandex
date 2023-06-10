@@ -1,4 +1,4 @@
-import { MESSAGE_MONTHS } from 'constants/common';
+import { MESSAGE_MONTHS } from 'app-constants/common';
 import { Block } from 'lib/block';
 import { cn } from 'utils/bem';
 import { addLeadingZero, getDate } from 'utils/common';

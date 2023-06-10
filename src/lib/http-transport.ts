@@ -1,6 +1,6 @@
-import { APP_URLS } from 'constants';
+import { APP_URLS } from 'app-constants';
 import { getType, queryStringify } from 'utils/common';
-import { showTooltip } from '../utils/tooltip';
+import { showTooltip } from 'utils/tooltip';
 
 enum Methods {
   GET = 'GET',
@@ -27,7 +27,7 @@ export type HTTPTransportResponse<T = void> = {
   statusCode: number;
 };
 
-export class HTTPTransport {
+export class HttpTransport {
   private readonly baseUrl: string;
 
   constructor(baseUrl: string) {
@@ -125,4 +125,4 @@ export class HTTPTransport {
   }
 }
 
-export const httpTransport = new HTTPTransport(APP_URLS.API);
+export const httpTransport = new HttpTransport(APP_URLS.API);

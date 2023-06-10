@@ -1,4 +1,4 @@
-import { httpTransport } from 'lib/HTTPTransport';
+import { httpTransport } from 'lib/http-transport';
 import {
   ChatIdDTO,
   ChatResponseDTO,

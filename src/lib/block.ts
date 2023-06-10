@@ -1,4 +1,4 @@
-import { FORCE_HIDDEN_CLASS } from 'constants';
+import { FORCE_HIDDEN_CLASS } from 'app-constants';
 import Handlebars from 'handlebars';
 import { EventBus } from 'lib/event-bus';
 import { isEqual } from 'utils/common';
@@ -54,11 +54,11 @@ export class Block<
   private readonly _elementSelectorForEvents?: string | null;
 
   static EVENTS = {
-    INIT: 'init',
-    FLOW_CDM: 'flow:component-did-mount',
-    FLOW_CDU: 'flow:component-did-update',
-    FLOW_CWU: 'flow:component-will-unmount',
-    FLOW_RENDER: 'flow:render',
+    INIT: 'init' as const,
+    FLOW_CDM: 'flow:component-did-mount' as const,
+    FLOW_CDU: 'flow:component-did-update' as const,
+    FLOW_CWU: 'flow:component-will-unmount' as const,
+    FLOW_RENDER: 'flow:render' as const,
   };
 
   static UPDATE_EVENTS = {
@@ -338,7 +338,11 @@ export class Block<
   }
 
   protected render(): DocumentFragment | HTMLElement {
-    return new DocumentFragment();
+    const el = document.createElement('template');
+    const fragment = new DocumentFragment();
+
+    fragment.replaceChildren(el);
+    return fragment;
   }
 
   public getContent() {

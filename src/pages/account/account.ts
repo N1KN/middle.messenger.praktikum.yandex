@@ -1,5 +1,5 @@
-import { RouteNames } from 'constants/router';
 import { UserResponseDTO } from 'api/user/types';
+import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { Divider } from 'components/divider';
 import { EditAvatar } from 'components/edit-avatar';
@@ -11,10 +11,10 @@ import { AuthControllerInstance } from 'controllers';
 import { UserControllerInstance } from 'controllers/user-controller';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { getUrlByRoute } from 'lib/router';
 import { store } from 'store';
 import { cn } from 'utils/bem';
 import { createUrlToResource } from 'utils/common';
-import { getUrlByRoute } from 'utils/router';
 import { showTooltip } from 'utils/tooltip';
 import {
   createTextValidator,

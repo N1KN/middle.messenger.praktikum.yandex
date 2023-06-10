@@ -1,6 +1,6 @@
 import { Block, IBlockProps } from 'lib/block';
+import { RouterInstance } from 'lib/router';
 import { cn } from 'utils/bem';
-import { RouterInstance } from 'utils/router';
 
 import './styles.pcss';
 

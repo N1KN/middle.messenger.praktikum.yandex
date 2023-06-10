@@ -1,7 +1,7 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { LinkButton } from 'components/link-button';
 import { Block } from 'lib/block';
-import { getUrlByRoute } from 'utils/router';
+import { getUrlByRoute } from 'lib/router';
 
 export class SiteMap extends Block {
   protected init() {

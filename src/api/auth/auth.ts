@@ -1,5 +1,5 @@
 import { UserResponseDTO } from 'api/user/types';
-import { httpTransport } from 'lib/HTTPTransport';
+import { httpTransport } from 'lib/http-transport';
 import { SignInRequestDTO, SignUpRequestDTO, SignUpResponseDTO } from './types';
 
 export class AuthApi {

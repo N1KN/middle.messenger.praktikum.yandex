@@ -1,13 +1,13 @@
-import { RouteNames } from 'constants';
+import { RouteNames } from 'app-constants';
 import { Button } from 'components/button';
 import { LinkButton } from 'components/link-button';
 import { TextField } from 'components/text-field';
 import { AuthControllerInstance } from 'controllers';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { getUrlByRoute, RouterInstance } from 'lib/router';
 import { store } from 'store';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouterInstance } from 'utils/router';
 import {
   createTextValidator,
   validateLogin,

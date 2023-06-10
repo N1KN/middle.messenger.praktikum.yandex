@@ -1,5 +1,5 @@
-import { APP_URLS } from 'constants';
 import { MessageDTO } from 'api/chats/types';
+import { APP_URLS } from 'app-constants';
 import { WebSocketTransportEvents, WebSocketTransport } from 'lib/web-socket-transport';
 import { store } from 'store';
 import { addMessagesForChatById } from 'store/chats/actions';

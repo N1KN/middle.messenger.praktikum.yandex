@@ -1,0 +1,9 @@
+{
+  "*.{ts,js}": [
+    "npx eslint --fix ./src --ext .ts",
+    "npx prettier --write \"./src/**/*.ts\""
+  ],
+  "*.pcss": [
+    "npx stylelint src/**/*.pcss"
+  ]
+}

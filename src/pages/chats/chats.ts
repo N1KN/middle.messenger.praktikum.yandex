@@ -1,4 +1,4 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { ChatListItem } from 'components/chat-list-item';
 import { DialogArea } from 'components/dialog-area';
@@ -7,10 +7,10 @@ import Popup from 'components/popup';
 import { TextField } from 'components/text-field';
 import { ChatsControllerInstance } from 'controllers/chat-controller';
 import { Block, IBlockProps, OnUpdateProps } from 'lib/block';
+import { getUrlByRoute } from 'lib/router';
 import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
 import { isNotNil } from 'utils/common';
-import { getUrlByRoute } from 'utils/router';
 import { showTooltip } from 'utils/tooltip';
 
 import './styles.pcss';

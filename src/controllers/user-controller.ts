@@ -1,8 +1,8 @@
-import { RouteNames } from 'constants';
 import { UserApi } from 'api/user';
+import { RouteNames } from 'app-constants';
+import { RouterInstance } from 'lib/router';
 import { GetFirstParameter } from 'types/common';
 import { isBadResponse } from 'utils/api';
-import { RouterInstance } from 'utils/router';
 import { showTooltip } from 'utils/tooltip';
 import { AuthControllerInstance } from './auth-controller';
 

@@ -1,12 +1,12 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
 import { TextField } from 'components/text-field';
 import { UserControllerInstance } from 'controllers/user-controller';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { getUrlByRoute } from 'lib/router';
 import { cn } from 'utils/bem';
-import { getUrlByRoute } from 'utils/router';
 import { createTextValidator, validateMaxLength, validateMinLength, validatePassword } from 'utils/validators';
 
 import './styles.pcss';

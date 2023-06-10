@@ -38,10 +38,10 @@ export class AppContainer extends Block<AppContainerProps, AppContainerState> {
     if (type === Block.UPDATE_EVENTS.STATE) {
       const newComponent = this.state.authChecked ? this.props.page : new Spinner({});
 
-      if (newComponent.id !== (this.children.page as Block).id) {
-        (this.children.page as Block).emitComponentWillUnmount();
+      if (newComponent?.id !== (this.children.page as Block | null)?.id) {
+        (this.children.page as Block | null)?.emitComponentWillUnmount();
         this.children.page = newComponent;
-        (this.children.page as Block).emitComponentDidMount();
+        (this.children.page as Block | null)?.emitComponentDidMount();
       }
     }
 

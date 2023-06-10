@@ -1,4 +1,4 @@
-import { TOOLTIP_CLASS, TOOLTIP_ROOT_SELECTOR } from 'constants';
+import { TOOLTIP_CLASS, TOOLTIP_ROOT_SELECTOR } from 'app-constants';
 import { cn } from './bem';
 
 type TooltipProp = {
