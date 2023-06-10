@@ -11,8 +11,6 @@ import { createTextValidator, validateMaxLength, validateMinLength, validatePass
 
 import './styles.pcss';
 
-const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
-
 const cnChangePassword = cn('ChangePassword');
 const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT);
 
@@ -55,13 +53,6 @@ export class ChangePassword extends Block {
   render() {
     const template = `
         <form class="${cnChangePassword()}">
-            <!--div class="${cnChangePassword('headerContent')}">
-                <div class="${cnChangePassword('changeAvatar')}">
-                    <img src="${avatarUrl}" alt="Аватар по умолчанию" />
-                    <div class="${cnChangePassword('changeAvatarText')}">Поменять аватар</div>
-                </div>
-            </div-->
-
             <div class="${cnChangePassword('bodyContent')}">
                 {{{oldPassword}}}
                 {{{newPassword}}}

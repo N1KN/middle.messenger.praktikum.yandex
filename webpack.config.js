@@ -14,7 +14,7 @@ module.exports = (_env, options) => {
   const isDev = mode === 'development';
 
   return {
-    mode: 'development',
+    mode: mode,
     // target: 'web',
     stats: 'errors-only',
     // stats: { children: true },

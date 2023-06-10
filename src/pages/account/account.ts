@@ -1,4 +1,5 @@
 import { UserResponseDTO } from 'api/user/types';
+import { avatarUrl } from 'app-constants';
 import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { Divider } from 'components/divider';
@@ -36,8 +37,6 @@ type AccountPageState = {
   user?: UserResponseDTO | null;
   changeAvatarPopup: Popup;
 };
-
-const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
 
 const cnAccountPage = cn('AccountPage');
 const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT_EDIT);

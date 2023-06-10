@@ -33,7 +33,7 @@
 
   "exclude": ["dist", "node_modules"],
   "include": [
-    "src", "./**/*.ts"
+    "src", "src/types/custom.d.ts"
   ],
   "ts-node": {
     "files": true

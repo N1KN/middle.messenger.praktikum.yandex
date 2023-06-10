@@ -1,5 +1,6 @@
 import { ChatResponseDTO } from 'api/chats/types';
 import { APP_URLS } from 'app-constants';
+import { avatarUrl } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Button } from 'components/button';
 import { DialogForm } from 'components/dialog-form';
@@ -35,7 +36,7 @@ type DialogAreaState = {
 
 const cnDialogArea = cn('DialogArea');
 
-const defaultAvatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
+const defaultAvatarUrl = avatarUrl;
 export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
   constructor(props: DialogAreaProps) {
     const events: IBlockProps['events'] = {

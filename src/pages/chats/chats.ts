@@ -1,3 +1,4 @@
+import { searchIcon } from 'app-constants';
 import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { ChatListItem } from 'components/chat-list-item';
@@ -21,7 +22,7 @@ type ChatsPageState = {
   user: RootState[RootDucks.USER]['userInfo'];
 };
 
-const searchIconUrl = new URL('/src/static/img/search.svg', import.meta.url);
+const searchIconUrl = searchIcon;
 
 const cnChatsPage = cn('ChatsPage');
 const accountLink = getUrlByRoute(RouteNames.ACCOUNT);

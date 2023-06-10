@@ -1,4 +1,5 @@
 import { ChatResponseDTO } from 'api/chats/types';
+import { avatarUrl } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Block, IBlockProps } from 'lib/block';
 import { cn } from 'utils/bem';
@@ -20,7 +21,7 @@ type ChatListItemProps = {
 
 const cnChatListItem = cn('ChatListItem');
 
-const defaultAvatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
+const defaultAvatarUrl = avatarUrl;
 
 export class ChatListItem extends Block<ChatListItemProps> {
   constructor(props: ChatListItemProps) {
