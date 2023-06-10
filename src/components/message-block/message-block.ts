@@ -1,7 +1,7 @@
 import { MESSAGE_MONTHS } from 'constants/common';
 import { Block } from 'lib/block';
 import { cn } from 'utils/bem';
-import { getDate } from 'utils/common';
+import { addLeadingZero, getDate } from 'utils/common';
 
 import './styles.pcss';
 
@@ -27,7 +27,7 @@ export class MessageBlock extends Block<MessageBlockProps> {
     const date = getDate(time);
 
     const centralDate = isFirstMessageAtTime
-      ? `<p class="${cnMessageBlock('')}">${date.day} ${MESSAGE_MONTHS[date.month]}</p>`
+      ? `<p class="${cnMessageBlock('centralDate')}">${addLeadingZero(date.day)} ${MESSAGE_MONTHS[date.month]}</p>`
       : '';
 
     const template = `
@@ -37,7 +37,9 @@ export class MessageBlock extends Block<MessageBlockProps> {
         <p class="${cnMessageBlock('content', {
           isMine,
           isRead,
-        })}"> {{content}} <time class="${cnMessageBlock('time')}">${date.hour}:${date.minute}</time></p>
+        })}"> {{content}} <time class="${cnMessageBlock('time')}">${addLeadingZero(date.hour)}:${addLeadingZero(
+      date.minute,
+    )}</time></p>
 <!--      </li>-->
     </div>`;
 

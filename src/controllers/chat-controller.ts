@@ -9,7 +9,7 @@ import { showTooltip } from 'utils/tooltip';
 import { MessagesControllerInstance } from './message-controller';
 import { UserControllerInstance } from './user-controller';
 
-class ChatsController {
+export class ChatsController {
   async create(title: string) {
     await ChatsApi.createChat({ title });
     await this.fetchChats();
@@ -26,16 +26,19 @@ class ChatsController {
       const result = await ChatsApi.getChats();
       if (isGoodApiResponse(result)) {
         const chats = result.data;
+        store.dispatch(setChats(chats));
 
         chats.map(async (chat) => {
+          if (MessagesControllerInstance.checkIsConnected(chat.id)) {
+            return;
+          }
+
           const tokenResponse = await this.getToken(chat.id);
 
           if (isGoodApiResponse(tokenResponse)) {
             await MessagesControllerInstance.connect(chat.id, tokenResponse.data.token);
           }
         });
-
-        store.dispatch(setChats(chats));
       }
     } catch (e) {
       showTooltip({

@@ -48,7 +48,7 @@ export class SignInPage extends Block {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       loginInput: new TextField({
         title: 'Логин',
         name: 'login',
@@ -69,7 +69,7 @@ export class SignInPage extends Block {
         text: 'Нет аккаунта?',
         url: signUpLink,
       }),
-    };
+    });
   }
 
   componentDidMount() {

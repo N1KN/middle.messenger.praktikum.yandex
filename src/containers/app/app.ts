@@ -26,7 +26,9 @@ export class AppContainer extends Block<AppContainerProps, AppContainerState> {
   protected init() {
     this.state.authChecked = store.getState().auth.authChecked;
     const unsubscribe = store.subscribe((state) => {
-      this.state.authChecked = state.auth.authChecked;
+      if (this.state.authChecked !== state.auth.authChecked) {
+        this.state.authChecked = state.auth.authChecked;
+      }
     });
 
     this.addToUnmountQueue(unsubscribe);

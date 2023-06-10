@@ -10,9 +10,7 @@ const chatsLink = getUrlByRoute(RouteNames.CHATS);
 
 export class NotFoundPage extends Block {
   protected init() {
-    this.children = {
-      chatsLinkButton: new LinkButton({ url: chatsLink, text: 'Назад к чатам' }),
-    };
+    this.children.chatsLinkButton = new LinkButton({ url: chatsLink, text: 'Назад к чатам' });
   }
 
   render() {

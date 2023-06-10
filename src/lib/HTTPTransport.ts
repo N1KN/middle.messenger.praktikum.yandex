@@ -44,6 +44,8 @@ export class HTTPTransport {
         message: `Ошибка при отправке GET запроса: ${(err as Error).message}`,
         type: 'error',
       });
+
+      return { reason: 'catch_error', info: (err as Error).message } as HTTPTransportError;
     }
   }
 
@@ -117,6 +119,7 @@ export class HTTPTransport {
         }
       } catch (e) {
         console.error(e);
+        reject({ reason: 'catch_error', info: (e as Error).message });
       }
     });
   }

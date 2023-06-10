@@ -3,10 +3,16 @@ import { MessageDTO } from 'api/chats/types';
 import { WebSocketTransportEvents, WebSocketTransport } from 'lib/web-socket-transport';
 import { store } from 'store';
 import { addMessagesForChatById } from 'store/chats/actions';
+import { debounce } from 'utils/common';
 import { ChatsControllerInstance } from './chat-controller';
 
 export class MessagesController {
   private transports: Map<number, WebSocketTransport> = new Map();
+  private debouncedFetchChats: (() => void) | null = null;
+
+  checkIsConnected(id: number): boolean {
+    return this.transports.has(id);
+  }
 
   async connect(id: number, token: string) {
     if (this.transports.has(id)) {
@@ -62,7 +68,12 @@ export class MessagesController {
     }
 
     store.dispatch(addMessagesForChatById({ id, messages: messagesToAdd }));
-    ChatsControllerInstance.fetchChats();
+
+    if (!this.debouncedFetchChats) {
+      this.debouncedFetchChats = debounce(ChatsControllerInstance.fetchChats.bind(ChatsControllerInstance), 1000);
+    }
+
+    this.debouncedFetchChats();
   }
 
   private onClose(id: number) {

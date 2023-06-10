@@ -5,8 +5,7 @@ import { getUrlByRoute } from 'utils/router';
 
 export class SiteMap extends Block {
   protected init() {
-    this.children = {
-      ...this.children,
+    this.setChildren({
       pageItems: [
         new LinkButton({ url: getUrlByRoute(RouteNames.SIGN_IN), text: 'Страница входа' }),
         new LinkButton({ url: getUrlByRoute(RouteNames.SIGN_UP), text: 'Страница авторизации' }),
@@ -23,7 +22,7 @@ export class SiteMap extends Block {
           text: 'Страница 500',
         }),
       ],
-    };
+    });
   }
   render() {
     const template = `

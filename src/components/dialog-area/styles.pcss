@@ -12,11 +12,14 @@
   }
 
   &-header {
+    z-index: 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--color-bg-border);
+    position: sticky;
+    top: 0;
   }
 
   &-chatMenu_isShown ~ &-chatMenuWrapper {
@@ -86,8 +89,11 @@
   }
 
   &-footer {
+    z-index: 2;
     padding-top: 11px;
     border-top: 1px solid var(--color-bg-border);
+    position: sticky;
+    bottom: 0;
   }
 
   &-menuButton {

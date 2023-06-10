@@ -46,7 +46,7 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       profileBtn: new LinkButton({
         url: accountLink,
         text: 'Профиль >',
@@ -60,12 +60,13 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
       }),
       chatItems: [],
       dialogArea: new DialogArea({
+        userId: null,
         chatId: null,
         title: null,
         avatar: null,
         // messages: [],
       }),
-    };
+    });
 
     this.children.newChatPopup = new Popup({
       title: 'Создать новый чат?',
@@ -113,7 +114,8 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
           }),
       );
 
-      (this.children.dialogArea as DialogArea).setProps({
+      (this.children.dialogArea as DialogArea | undefined)?.setProps({
+        userId: this.state.user?.id,
         chatId: this.state.selectedChat?.id,
         avatar: this.state.selectedChat?.avatar,
         title: this.state.selectedChat?.title,

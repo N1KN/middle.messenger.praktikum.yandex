@@ -268,3 +268,11 @@ export const queryStringify = (data: StringIndexed): string | never => {
     return `${result}${key}=${value}${endLine}`;
   }, '');
 };
+
+export function debounce<T extends any[]>(func: (...args: T) => void, delay: number) {
+  let timeoutID: ReturnType<typeof setTimeout>;
+  return function (this: ThisParameterType<typeof func>, ...args: T) {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => func.apply(this, args), delay);
+  };
+}

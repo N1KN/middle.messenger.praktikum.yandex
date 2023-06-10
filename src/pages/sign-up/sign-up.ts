@@ -46,7 +46,7 @@ export class SignUpPage extends Block {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       mailInput: new TextField({
         title: 'Почта',
         type: 'email',
@@ -95,7 +95,7 @@ export class SignUpPage extends Block {
         text: 'Войти',
         url: signInLink,
       }),
-    };
+    });
   }
 
   componentDidMount() {
