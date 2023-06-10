@@ -1,6 +1,7 @@
+import { FORCE_HIDDEN_CLASS } from 'constants';
 import Handlebars from 'handlebars';
 import { EventBus } from 'lib/event-bus';
-import { deepAssign, isEqual } from 'utils/common';
+import { isEqual } from 'utils/common';
 
 export type IBlockProps<PROPS = { [key: string]: any }> = {
   attributes?: any;
@@ -9,9 +10,10 @@ export type IBlockProps<PROPS = { [key: string]: any }> = {
   className?: string;
 } & PROPS;
 
-type OnUpdateProps = {
-  oldValue: any;
-  newValue: any;
+export type OnUpdateProps = {
+  type: (typeof Block.UPDATE_EVENTS)[keyof typeof Block.UPDATE_EVENTS];
+  oldTarget: any;
+  target: any;
 };
 
 const uuid = function uuid() {
@@ -20,14 +22,17 @@ const uuid = function uuid() {
   );
 };
 
-export class Block<PROPS extends IBlockProps = Record<string, any>> {
+export class Block<
+  PROPS extends IBlockProps = Record<string, any>,
+  STATE extends Record<string, any> = Record<string, any>,
+> {
   private readonly _meta: { tagName: string; props: IBlockProps };
-  protected state: Record<string, any> = {};
+  protected state: STATE = {} as STATE;
   public get props(): PROPS {
     return this._meta.props as PROPS;
   }
 
-  children: Required<IBlockProps>['children'] = {};
+  protected children: Required<IBlockProps>['children'] = {};
   protected readonly eventBus = new EventBus();
   private _id = uuid();
   public get id() {
@@ -46,6 +51,13 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     FLOW_RENDER: 'flow:render',
   };
 
+  static UPDATE_EVENTS = {
+    STATE: 'state' as const,
+    PROPS: 'props' as const,
+    CHILDREN: 'children' as const,
+  };
+
+  private _unmountQueue = new Set<() => void>();
   constructor(propsAndChildren: IBlockProps<PROPS> = {} as PROPS, targetSelectorForEvents?: string) {
     const { children, props } = this._getPropsAndChildren(propsAndChildren);
     this.eventBus = new EventBus();
@@ -55,7 +67,7 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     };
     this._meta.props = this._makePropsProxy({ ...props, _id: this._id }, 'props');
     this.children = this._makePropsProxy({ ...children }, 'children');
-    this.state = this._makePropsProxy(this.state, 'state') as Record<string, any>;
+    this.state = this._makePropsProxy(this.state, 'state') as unknown as STATE;
     this._registerEvents(this.eventBus);
 
     this._elementSelectorForEvents = targetSelectorForEvents;
@@ -77,12 +89,12 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     Object.assign(this.props, nextProps);
   }
 
-  setState(nextState: any) {
+  protected setState(nextState: Partial<STATE>) {
     if (!nextState) {
       return;
     }
 
-    deepAssign({}, this.state, nextState);
+    Object.assign(this.state, nextState);
   }
 
   private _getPropsAndChildren(propsAndChildren: IBlockProps) {
@@ -106,10 +118,11 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     return { children, props };
   }
 
-  _registerEvents(eventBus: EventBus) {
+  private _registerEvents(eventBus: EventBus) {
     eventBus.on(Block.EVENTS.INIT, this._init.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDM, this._componentDidMount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_CDU, this._componentDidUpdate.bind(this));
+    eventBus.on(Block.EVENTS.FLOW_CWU, this._componentWillUnmount.bind(this));
     eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this));
   }
 
@@ -151,9 +164,12 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     }
   }
 
+  protected getState(): Partial<STATE> {
+    return this.state;
+  }
   protected getStateFromProps(props: PROPS): void {
     void props;
-    this.state = {};
+    this.state = {} as STATE;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -164,7 +180,7 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
     this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
   }
 
-  _componentDidMount() {
+  private _componentDidMount() {
     this.componentDidMount();
     Object.values(this.children).forEach((children) => {
       if (Array.isArray(children)) {
@@ -178,19 +194,46 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   protected componentDidMount() {}
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected componentWillUnmount() {}
+  private _componentWillUnmount() {
+    this._unmountQueue.forEach((func) => func());
+    this._unmountQueue.clear();
+
+    this.componentWillUnmount();
+
+    Object.values(this.children).forEach((children) => {
+      if (Array.isArray(children)) {
+        children.forEach((child) => child.emitComponentWillUnmount());
+      } else {
+        children.emitComponentWillUnmount();
+      }
+    });
+  }
+
+  // Коллбэки, которые будут вызваны при размонтировании
+  public addToUnmountQueue(func: () => void): void {
+    this._unmountQueue.add(func);
+  }
+
+  public emitComponentWillUnmount() {
+    this.eventBus.emit(Block.EVENTS.FLOW_CWU);
+  }
+
   public emitComponentDidMount() {
     this.eventBus.emit(Block.EVENTS.FLOW_CDM);
   }
 
-  private _componentDidUpdate({ oldValue, newValue }: OnUpdateProps) {
-    const shouldBeUpdated = this.componentDidUpdate({ oldValue, newValue });
+  private _componentDidUpdate({ oldTarget, target, type }: OnUpdateProps) {
+    const shouldBeUpdated = this.componentDidUpdate({ oldTarget, target, type });
     if (shouldBeUpdated) {
       this.eventBus.emit(Block.EVENTS.FLOW_RENDER);
     }
   }
 
-  componentDidUpdate({ oldValue, newValue }: OnUpdateProps) {
-    return !isEqual(oldValue, newValue);
+  protected componentDidUpdate({ oldTarget, target, type }: OnUpdateProps) {
+    void type;
+    return !isEqual(oldTarget, target);
   }
 
   get element() {
@@ -287,14 +330,22 @@ export class Block<PROPS extends IBlockProps = Record<string, any>> {
         return typeof value === 'function' ? value.bind(this) : value;
       },
       set: (target: IBlockProps, prop: string, newValue) => {
-        const oldValue = target[prop];
+        const oldTarget = { ...target };
         target[prop] = newValue;
-        this.eventBus.emit(Block.EVENTS.FLOW_CDU, { type, oldValue, newValue });
+        this.eventBus.emit(Block.EVENTS.FLOW_CDU, { type, oldTarget, target });
         return true;
       },
       deleteProperty() {
         throw new Error('Отказано в доступе');
       },
     }) as PROPS;
+  }
+
+  public show() {
+    this.getContent()!.classList.remove(FORCE_HIDDEN_CLASS);
+  }
+
+  public hide() {
+    this.getContent()!.classList.add(FORCE_HIDDEN_CLASS);
   }
 }

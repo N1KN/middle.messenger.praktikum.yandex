@@ -13,7 +13,7 @@ type TextFieldProps = {
   isDisabled?: boolean;
   title: string;
   errorText?: string;
-  type?: 'text' | 'password' | 'tel' | 'email';
+  type?: 'text' | 'password' | 'tel' | 'email' | 'file';
   name: string;
   minLength?: number;
   maxLength?: number;

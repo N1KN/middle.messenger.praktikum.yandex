@@ -1,6 +1,7 @@
+import { RouteNames } from 'constants/router';
 import { LinkButton } from 'components/link-button';
 import { Block } from 'lib/block';
-import { getUrlByRoute, RouteNames } from 'utils/router';
+import { getUrlByRoute } from 'utils/router';
 import { notFoundPageTemplate } from './not-found.tpl';
 
 import './styles.pcss';

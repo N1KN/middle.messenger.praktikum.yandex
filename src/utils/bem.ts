@@ -6,7 +6,7 @@ export declare type EntityMods = Record<string, string | boolean | number | unde
 const modDelimiter = '_';
 const elemsDelimiter = '-';
 
-function stringify(block?: string, elem?: string, mods?: EntityMods, mix?: ClassNameList) {
+function stringify(block: string, elem?: string, mods?: EntityMods, mix?: ClassNameList) {
   const entityName = elem ? block + elemsDelimiter + elem : block;
   let className = entityName;
 
