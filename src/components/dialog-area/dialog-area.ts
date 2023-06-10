@@ -284,10 +284,12 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
         <div class="${cnDialogArea('chatMenu-hiddenOverlay')}"></div>
       </div>
 
-      <div class="${cnDialogArea('messages')}">
-        {{#each messageBlocks}}
-          {{{this}}}
-        {{/each}}
+      <div class="${cnDialogArea('messagesWrapper')}">
+        <div class="${cnDialogArea('messages')}">
+          {{#each messageBlocks}}
+            {{{this}}}
+          {{/each}}
+        </div>
       </div>
       <div class="${cnDialogArea('footer')}">
         {{{dialogForm}}}

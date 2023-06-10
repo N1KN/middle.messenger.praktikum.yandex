@@ -3,6 +3,7 @@
   flex-direction: column;
   justify-content: center;
   flex-grow: 1;
+  overflow-y: hidden;
 
   &_isEmpty {
     align-items: center;
@@ -80,12 +81,19 @@
     margin-bottom: 10px;
   }
 
-  &-messages {
-    display: flex;
+  &-messagesWrapper {
+    height: 100%;
     flex-direction: column;
     flex-grow: 1;
     margin: 0;
     padding: 0 10px;
+    display: flex;
+    overflow-y: auto;
+  }
+
+  &-messages {
+    display: flex;
+    flex-direction: column;
   }
 
   &-footer {
