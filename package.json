@@ -12,13 +12,13 @@
     "npm": ">=6.14"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "npm run build && node server.js",
     "dev": "webpack serve --progress --mode=development ",
     "build": "webpack --mode production",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register -r ./test/setup.js './src/**/*.test.ts'",
     "postinstall": "husky install",
-    "pre-commit": "npm run lint-staged",
-    "pre-commit:maual": "npm run lint:fix && npm run prettier:fix",
+    "pre-commit": "npx lint-staged",
+    "pre-commit:maual": "npm run lint:fix && npm run prettier:fix && npm run test",
     "tsc-dry-run": "tsc --noEmit",
     "lint:check": "npx eslint ./",
     "lint:fix": "npx eslint --fix ./src --ext .ts",

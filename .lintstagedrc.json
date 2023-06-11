@@ -3,6 +3,9 @@
     "npx eslint --fix ./src --ext .ts",
     "npx prettier --write \"./src/**/*.ts\""
   ],
+  "*.test.{ts,js}": [
+    "mocha -r ts-node/register -r tsconfig-paths/register -r ./test/setup.js './src/**/*.test.ts"
+  ],
   "*.pcss": [
     "npx stylelint src/**/*.pcss"
   ]

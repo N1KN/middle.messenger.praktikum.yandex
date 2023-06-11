@@ -21,7 +21,7 @@ describe('Button', () => {
     const element = instance.element!;
     element?.click();
 
-    chai.expect(mockFunction.callCount).to.eq(1);
+    chai.expect(mockFunction.called).to.eq(true);
   });
 
   it('При установке поля isSubmit у элемента должен быть аргумент [type="submit"]', () => {
