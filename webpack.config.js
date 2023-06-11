@@ -2,27 +2,30 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 // const isDev = process.env.NODE_ENV === 'development';
 const INDEX_FILE = '/src/index.html';
 
 module.exports = (_env, options) => {
   const rootPath = __dirname;
-  console.log('ROOT_PATH: ', rootPath);
   const mode = options.mode;
+
+  console.log('ROOT_PATH: ', rootPath);
+  console.log('MODE: ', mode);
+
   const isDev = mode === 'development';
 
   return {
     mode: mode,
     // target: 'web',
-    stats: 'errors-only',
-    // stats: { children: true },
+    // stats: 'errors-only',
+    stats: { children: true, logging: 'verbose' },
     entry: {
       main: path.join(rootPath, '/src/index.ts'),
     },
     devtool: isDev && 'source-map',
     output: {
+      clean: true,
       path: path.join(rootPath, '/dist'),
       filename: '[name].[contenthash].js',
       publicPath: '/',
@@ -116,10 +119,6 @@ module.exports = (_env, options) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: path.join(rootPath, INDEX_FILE),
-      }),
-      new ESLintPlugin({
-        extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
-        eslintPath: require.resolve('eslint'),
       }),
       new MiniCssExtractPlugin({
         filename: '[name].[contenthash].css',

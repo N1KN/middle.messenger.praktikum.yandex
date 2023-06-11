@@ -12,10 +12,8 @@
     "npm": ">=6.14"
   },
   "scripts": {
-    "start": "rimraf dist && npm run build && node server.js",
-    "dev_": "parcel src/index.html --port 1234 --open --no-cache",
+    "start": "npm run build && node server.js",
     "dev": "webpack serve --progress --mode=development ",
-    "build_": "parcel build src/index.html --no-cache",
     "build": "webpack --mode production",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register -r ./test/setup.js './src/**/*.test.ts'",
     "postinstall": "husky install",
@@ -27,11 +25,6 @@
     "prettier:check": "npx prettier --check \"./src/**/*.ts\"",
     "prettier:fix": "npx prettier --write \"./src/**/*.ts\"",
     "stylelint:fix": "npx stylelint src/**/*.pcss"
-  },
-  "_husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "browserslist": [
     "> 0.5%",
