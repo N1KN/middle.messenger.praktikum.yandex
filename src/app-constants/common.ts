@@ -1,8 +1,3 @@
-import _avatarUrl from 'static/img/avatar.svg';
-import _searchIcon from 'static/img/search.svg';
-export const avatarUrl = _avatarUrl;
-export const searchIcon = _searchIcon;
-
 export const ROOT_SELECTOR = '#root';
 export const TOOLTIP_ROOT_SELECTOR = '#tooltip-root';
 export const FORCE_HIDDEN_CLASS = 'Root-forceHidden';

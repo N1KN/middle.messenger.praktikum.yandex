@@ -1,6 +1,5 @@
 import { ChatResponseDTO } from 'api/chats/types';
 import { APP_URLS } from 'app-constants';
-import { avatarUrl } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Button } from 'components/button';
 import { DialogForm } from 'components/dialog-form';
@@ -15,6 +14,7 @@ import { cn } from 'utils/bem';
 import { createUrlToResource, isNotNil } from 'utils/common';
 import { getIdUniqDays } from 'utils/messages';
 import { showTooltip } from 'utils/tooltip';
+import avatarUrl from 'static/img/avatar.svg';
 
 import './styles.pcss';
 

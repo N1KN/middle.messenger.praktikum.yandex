@@ -1,4 +1,3 @@
-import { searchIcon } from 'app-constants';
 import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { ChatListItem } from 'components/chat-list-item';
@@ -13,6 +12,7 @@ import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
 import { isNotNil } from 'utils/common';
 import { showTooltip } from 'utils/tooltip';
+import searchIcon from 'static/img/search.svg';
 
 import './styles.pcss';
 

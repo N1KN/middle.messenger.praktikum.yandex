@@ -1,5 +1,4 @@
 import { UserResponseDTO } from 'api/user/types';
-import { avatarUrl } from 'app-constants';
 import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { Divider } from 'components/divider';
@@ -26,6 +25,7 @@ import {
   validateMaxLength,
   validateMinLength,
 } from 'utils/validators';
+import avatarUrl from 'static/img/avatar.svg';
 
 import './styles.pcss';
 

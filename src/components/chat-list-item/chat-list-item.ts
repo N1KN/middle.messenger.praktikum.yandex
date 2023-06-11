@@ -1,9 +1,9 @@
 import { ChatResponseDTO } from 'api/chats/types';
-import { avatarUrl } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Block, IBlockProps } from 'lib/block';
 import { cn } from 'utils/bem';
 import { createFormattedDateString, createUrlToResource, getDate, getType } from 'utils/common';
+import avatarUrl from 'static/img/avatar.svg';
 
 import './styles.pcss';
 
