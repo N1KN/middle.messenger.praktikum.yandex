@@ -21,7 +21,8 @@
 
 ### Текущий этап
 
-Спринт 3 из 4
+Спринт 4 из 4
+Готово!
 
 ### Спринт №1
 https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/2
@@ -62,6 +63,8 @@ https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/4
   * Отправка и получение текстовых сообщений
 
 ### Спринт №4
-
-*В ПРОЦЕССЕ*
 https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/5
+
+* Добавлен и настроен WebPack
+* Добавлены и настроены pre-commit активности посредством `husky` и `lint-staged`
+* Добавлены и настроены тесты посредством mocha
