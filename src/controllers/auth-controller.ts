@@ -1,11 +1,11 @@
-import { RouteNames } from 'constants';
 import { AuthApi } from 'api/auth';
+import { RouteNames } from 'app-constants';
+import { RouterInstance } from 'lib/router';
 import { setAuthChecked, setIsLoggedIn } from 'store/auth/actions';
 import { store } from 'store/store';
 import { setUser } from 'store/user/actions';
 import { GetFirstParameter } from 'types/common';
 import { isGoodApiResponse } from 'utils/api';
-import { RouterInstance } from 'utils/router';
 
 class AuthController {
   async signIn(data: GetFirstParameter<typeof AuthApi.signIn>) {

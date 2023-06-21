@@ -1,4 +1,4 @@
-import { HTTPTransportError, HTTPTransportResponse } from 'lib/HTTPTransport';
+import { HTTPTransportError, HTTPTransportResponse } from 'lib/http-transport';
 
 export const isGoodApiResponse = <T>(
   response: HTTPTransportResponse<T> | HTTPTransportError,

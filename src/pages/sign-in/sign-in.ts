@@ -1,13 +1,13 @@
-import { RouteNames } from 'constants';
+import { RouteNames } from 'app-constants';
 import { Button } from 'components/button';
 import { LinkButton } from 'components/link-button';
 import { TextField } from 'components/text-field';
 import { AuthControllerInstance } from 'controllers';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { getUrlByRoute, RouterInstance } from 'lib/router';
 import { store } from 'store';
 import { cn } from 'utils/bem';
-import { getUrlByRoute, RouterInstance } from 'utils/router';
 import {
   createTextValidator,
   validateLogin,
@@ -48,7 +48,7 @@ export class SignInPage extends Block {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       loginInput: new TextField({
         title: 'Логин',
         name: 'login',
@@ -69,7 +69,7 @@ export class SignInPage extends Block {
         text: 'Нет аккаунта?',
         url: signUpLink,
       }),
-    };
+    });
   }
 
   componentDidMount() {

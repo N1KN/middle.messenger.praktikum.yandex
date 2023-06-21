@@ -1,4 +1,4 @@
-import { FORCE_HIDDEN_CLASS } from 'constants';
+import { FORCE_HIDDEN_CLASS } from 'app-constants';
 import Handlebars from 'handlebars';
 import { EventBus } from 'lib/event-bus';
 import { isEqual } from 'utils/common';
@@ -26,13 +26,23 @@ export class Block<
   PROPS extends IBlockProps = Record<string, any>,
   STATE extends Record<string, any> = Record<string, any>,
 > {
-  private readonly _meta: { tagName: string; props: IBlockProps };
-  protected state: STATE = {} as STATE;
-  public get props(): PROPS {
-    return this._meta.props as PROPS;
+  private readonly _meta: { children: Required<IBlockProps>['children']; props: PROPS; state: STATE } = {
+    children: {},
+    props: {} as PROPS,
+    state: {} as STATE,
+  };
+  public get props() {
+    return this._meta.props;
   }
 
-  protected children: Required<IBlockProps>['children'] = {};
+  public get state() {
+    return this._meta.state;
+  }
+
+  public get children() {
+    return this._meta.children;
+  }
+
   protected readonly eventBus = new EventBus();
   private _id = uuid();
   public get id() {
@@ -44,11 +54,11 @@ export class Block<
   private readonly _elementSelectorForEvents?: string | null;
 
   static EVENTS = {
-    INIT: 'init',
-    FLOW_CDM: 'flow:component-did-mount',
-    FLOW_CDU: 'flow:component-did-update',
-    FLOW_CWU: 'flow:component-will-unmount',
-    FLOW_RENDER: 'flow:render',
+    INIT: 'init' as const,
+    FLOW_CDM: 'flow:component-did-mount' as const,
+    FLOW_CDU: 'flow:component-did-update' as const,
+    FLOW_CWU: 'flow:component-will-unmount' as const,
+    FLOW_RENDER: 'flow:render' as const,
   };
 
   static UPDATE_EVENTS = {
@@ -62,17 +72,26 @@ export class Block<
     const { children, props } = this._getPropsAndChildren(propsAndChildren);
     this.eventBus = new EventBus();
     this._meta = {
-      tagName: 'tmpl',
-      props: props,
+      props,
+      children,
+      state: {} as STATE,
     };
     this._meta.props = this._makePropsProxy({ ...props, _id: this._id }, 'props');
-    this.children = this._makePropsProxy({ ...children }, 'children');
-    this.state = this._makePropsProxy(this.state, 'state') as unknown as STATE;
+    this._meta.children = this._makePropsProxy({ ...children }, 'children');
+    this._meta.state = this._makePropsProxy({}, 'state') as unknown as STATE;
     this._registerEvents(this.eventBus);
 
     this._elementSelectorForEvents = targetSelectorForEvents;
 
     this.eventBus.emit(Block.EVENTS.INIT);
+  }
+
+  setChildren(nextState: Required<IBlockProps>['children']) {
+    if (!nextState) {
+      return;
+    }
+
+    Object.assign(this.children, nextState);
   }
 
   setProps(nextProps: PROPS | ((prevProps: PROPS) => PROPS)) {
@@ -97,8 +116,11 @@ export class Block<
     Object.assign(this.state, nextState);
   }
 
-  private _getPropsAndChildren(propsAndChildren: IBlockProps) {
-    const props: Record<string, unknown> = {};
+  private _getPropsAndChildren(propsAndChildren: IBlockProps): {
+    children: Required<IBlockProps>['children'];
+    props: PROPS;
+  } {
+    const props: Record<string, any> = {};
     const children: Record<string, Block> | Record<string, Block[]> = {};
     Object.entries(propsAndChildren).forEach(([key, value]) => {
       // Проверяем наличие в пропсах ключа children и если такой ключ есть, то пытаемся получить валидные инстансы класса Block
@@ -115,7 +137,7 @@ export class Block<
 
       props[key] = value;
     });
-    return { children, props };
+    return { children, props } as { children: Required<IBlockProps>['children']; props: PROPS };
   }
 
   private _registerEvents(eventBus: EventBus) {
@@ -169,7 +191,7 @@ export class Block<
   }
   protected getStateFromProps(props: PROPS): void {
     void props;
-    this.state = {} as STATE;
+    this.setState({});
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -316,7 +338,11 @@ export class Block<
   }
 
   protected render(): DocumentFragment | HTMLElement {
-    return new DocumentFragment();
+    const el = document.createElement('template');
+    const fragment = new DocumentFragment();
+
+    fragment.replaceChildren(el);
+    return fragment;
   }
 
   public getContent() {

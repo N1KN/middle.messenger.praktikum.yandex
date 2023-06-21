@@ -1,5 +1,6 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { Block, IBlockProps } from 'lib/block';
+import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouterInstance } from 'lib/router';
 import { AccountPage } from 'pages/account';
 import { ChangePassword } from 'pages/change-password';
 import { ChatsPage } from 'pages/chats';
@@ -8,7 +9,6 @@ import { NotFoundPage } from 'pages/not-found';
 import { SignInPage } from 'pages/sign-in';
 import { SignUpPage } from 'pages/sign-up';
 import { SiteMap } from 'pages/site-map';
-import { getRouteByUrlOrNotFoundRoute, getUrlByRoute, RouterInstance } from 'utils/router';
 import { AuthControllerInstance } from './controllers';
 
 import './styles.pcss';

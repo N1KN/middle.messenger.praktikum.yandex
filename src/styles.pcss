@@ -40,9 +40,23 @@
 }
 
 body {
+  background-color: var(--color-bg-default);
   margin: 0;
   box-sizing: border-box;
   font-family: Inter, Arial, sans-serif;
+
+  & ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  & ::-webkit-scrollbar-track {
+    background: var(--color-bg-border);
+  }
+
+  & ::-webkit-scrollbar-thumb {
+    background-color: var(--text-secondary-color);
+    border-radius: 20px;
+  }
 }
 
 #root {

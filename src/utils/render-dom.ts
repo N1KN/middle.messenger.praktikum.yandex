@@ -1,4 +1,4 @@
-import { ROOT_SELECTOR } from 'constants';
+import { ROOT_SELECTOR } from 'app-constants';
 import { AppContainer } from 'containers/app';
 import { Block } from 'lib/block';
 

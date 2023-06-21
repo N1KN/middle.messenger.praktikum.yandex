@@ -1,4 +1,4 @@
-import { httpTransport } from 'lib/HTTPTransport';
+import { httpTransport } from 'lib/http-transport';
 import { FindUserRequest, UserPasswordRequest, UserResponseDTO, UserUpdateRequest } from './types';
 
 export class UserApi {

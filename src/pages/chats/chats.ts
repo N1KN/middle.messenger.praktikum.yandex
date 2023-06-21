@@ -1,4 +1,4 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { ChatListItem } from 'components/chat-list-item';
 import { DialogArea } from 'components/dialog-area';
@@ -7,11 +7,12 @@ import Popup from 'components/popup';
 import { TextField } from 'components/text-field';
 import { ChatsControllerInstance } from 'controllers/chat-controller';
 import { Block, IBlockProps, OnUpdateProps } from 'lib/block';
+import { getUrlByRoute } from 'lib/router';
 import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
 import { isNotNil } from 'utils/common';
-import { getUrlByRoute } from 'utils/router';
 import { showTooltip } from 'utils/tooltip';
+import searchIcon from 'static/img/search.svg';
 
 import './styles.pcss';
 
@@ -21,7 +22,7 @@ type ChatsPageState = {
   user: RootState[RootDucks.USER]['userInfo'];
 };
 
-const searchIconUrl = new URL('/src/static/img/search.svg', import.meta.url);
+const searchIconUrl = searchIcon;
 
 const cnChatsPage = cn('ChatsPage');
 const accountLink = getUrlByRoute(RouteNames.ACCOUNT);
@@ -46,7 +47,7 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       profileBtn: new LinkButton({
         url: accountLink,
         text: 'Профиль >',
@@ -60,12 +61,13 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
       }),
       chatItems: [],
       dialogArea: new DialogArea({
+        userId: null,
         chatId: null,
         title: null,
         avatar: null,
         // messages: [],
       }),
-    };
+    });
 
     this.children.newChatPopup = new Popup({
       title: 'Создать новый чат?',
@@ -113,7 +115,8 @@ export class ChatsPage extends Block<IBlockProps, ChatsPageState> {
           }),
       );
 
-      (this.children.dialogArea as DialogArea).setProps({
+      (this.children.dialogArea as DialogArea | undefined)?.setProps({
+        userId: this.state.user?.id,
         chatId: this.state.selectedChat?.id,
         avatar: this.state.selectedChat?.avatar,
         title: this.state.selectedChat?.title,

@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es5",
+    "declaration": false,
+    "module": "commonjs",
+    "target": "es2016",
     "sourceMap": true,
     "lib": [
       "es5",
@@ -10,6 +11,7 @@
       "dom.iterable",
       "esnext"
     ],
+
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -25,12 +27,15 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strictNullChecks": true,
-    "jsx": "react-jsx",
     "baseUrl": "./src",
     "outDir": "./dist"
   },
 
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["dist", "node_modules"],
+  "include": [
+    "src", "src/types/custom.d.ts"
+  ],
+  "ts-node": {
+    "files": true
+  }
 }

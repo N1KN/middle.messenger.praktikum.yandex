@@ -3,6 +3,7 @@ import { Avatar } from 'components/avatar';
 import { Block, IBlockProps } from 'lib/block';
 import { cn } from 'utils/bem';
 import { createFormattedDateString, createUrlToResource, getDate, getType } from 'utils/common';
+import avatarUrl from 'static/img/avatar.svg';
 
 import './styles.pcss';
 
@@ -20,7 +21,7 @@ type ChatListItemProps = {
 
 const cnChatListItem = cn('ChatListItem');
 
-const defaultAvatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
+const defaultAvatarUrl = avatarUrl;
 
 export class ChatListItem extends Block<ChatListItemProps> {
   constructor(props: ChatListItemProps) {

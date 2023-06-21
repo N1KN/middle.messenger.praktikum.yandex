@@ -1,5 +1,5 @@
-import { APP_URLS } from 'constants';
 import { ChatResponseDTO } from 'api/chats/types';
+import { APP_URLS } from 'app-constants';
 import { Avatar } from 'components/avatar';
 import { Button } from 'components/button';
 import { DialogForm } from 'components/dialog-form';
@@ -12,19 +12,23 @@ import { Block, IBlockProps, OnUpdateProps } from 'lib/block';
 import { RootDucks, RootState, store } from 'store';
 import { cn } from 'utils/bem';
 import { createUrlToResource, isNotNil } from 'utils/common';
+import { getIdUniqDays } from 'utils/messages';
 import { showTooltip } from 'utils/tooltip';
+import avatarUrl from 'static/img/avatar.svg';
 
 import './styles.pcss';
 
 type DialogAreaProps = {
   className?: string;
   chatId?: number | null;
+  userId?: number | null;
   title?: ChatResponseDTO['title'] | null;
   avatar?: ChatResponseDTO['avatar'] | null;
   // messages: MessageDTO[];
 };
 
 type DialogAreaState = {
+  userId?: number | null;
   chatMenuIsShown: boolean;
   messages: RootState[RootDucks.CHATS]['messages'][number];
   usersInChat: RootState[RootDucks.CHATS]['usersInSelectedChat'];
@@ -32,8 +36,7 @@ type DialogAreaState = {
 
 const cnDialogArea = cn('DialogArea');
 
-const defaultAvatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url).toString();
-const MINE_USER_ID = 0;
+const defaultAvatarUrl = avatarUrl;
 export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
   constructor(props: DialogAreaProps) {
     const events: IBlockProps['events'] = {
@@ -45,9 +48,12 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
     };
 
     super({ ...props, events });
-    this.state.messages = [];
-    this.state.usersInChat = [];
-    this.state.chatMenuIsShown = false;
+    this.setState({
+      userId: props.userId,
+      messages: [],
+      usersInChat: [],
+      chatMenuIsShown: false,
+    });
   }
 
   private toggleChatMenu() {
@@ -83,7 +89,7 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
 
     this.addToUnmountQueue(unsubscribe);
 
-    this.children = {
+    this.setChildren({
       chatAvatar: new Avatar({
         src: (avatar ? `${APP_URLS.RESOURCES}${avatar}` : defaultAvatarUrl).toString(),
         label: 'Аватар пользователя',
@@ -204,29 +210,33 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
           (this.children.deleteChatPopup as Block).hide();
         },
       }),
-    };
+    });
   }
 
   protected componentDidUpdate({ oldTarget, target, type }: OnUpdateProps) {
     if (type === Block.UPDATE_EVENTS.STATE) {
-      const { messages } = this.state;
+      const { userId, messages = [] } = target as Partial<DialogAreaState>;
+
+      const firstMessagesOnDate = getIdUniqDays(messages);
 
       this.children.messageBlocks = messages
         // TODO: Добавить отображение файлов
         .filter((message) => !isNotNil(message.file))
         .map(
-          ({ content, is_read, time, user_id }) =>
+          ({ content, is_read, time, user_id, id }) =>
             new MessageBlock({
               content,
               time,
-              isFirstMessageAtTime: false,
+              isFirstMessageAtTime: firstMessagesOnDate.some((firstMessage) => firstMessage?.id === id),
               isRead: is_read,
-              isMine: user_id === MINE_USER_ID,
+              isMine: user_id === userId,
             }),
         );
     }
 
     if (type === Block.UPDATE_EVENTS.PROPS) {
+      this.state.userId = target.userId;
+
       (this.children.chatAvatar as Avatar).setProps((prevProps) => ({
         ...prevProps,
         src: createUrlToResource(defaultAvatarUrl, this.props.avatar),
@@ -275,10 +285,12 @@ export class DialogArea extends Block<DialogAreaProps, DialogAreaState> {
         <div class="${cnDialogArea('chatMenu-hiddenOverlay')}"></div>
       </div>
 
-      <div class="${cnDialogArea('messages')}">
-        {{#each messageBlocks}}
-          {{{this}}}
-        {{/each}}
+      <div class="${cnDialogArea('messagesWrapper')}">
+        <div class="${cnDialogArea('messages')}">
+          {{#each messageBlocks}}
+            {{{this}}}
+          {{/each}}
+        </div>
       </div>
       <div class="${cnDialogArea('footer')}">
         {{{dialogForm}}}

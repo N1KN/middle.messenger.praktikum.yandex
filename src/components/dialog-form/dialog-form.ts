@@ -16,7 +16,7 @@ export class DialogForm extends Block<DialogFormProps> {
   private _formHandler?: FormHandler;
 
   protected init() {
-    this.children = {
+    this.setChildren({
       // TODO: Реализовать добавление файлов
       // attachBtn: new Button({
       //   className: cnDialogForm('button'),
@@ -27,7 +27,7 @@ export class DialogForm extends Block<DialogFormProps> {
         isSubmit: true,
         label: 'Отправить сообщение',
       }),
-    };
+    });
   }
 
   private resetFormListeners() {

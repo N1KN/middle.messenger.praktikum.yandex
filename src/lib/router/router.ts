@@ -1,9 +1,9 @@
-import { RouteNames, SITE_PATHS } from 'constants';
+import { RouteNames, SITE_PATHS } from 'app-constants';
 import { Block } from 'lib/block';
-import { setElementByIndex } from './common';
-import { Route } from './route';
+import { isEqual, setElementByIndex } from 'utils/common';
+import { renderDOM } from 'utils/render-dom';
 
-type AnyBlockComponents = typeof Block<any>;
+export type AnyBlockComponents = typeof Block<any>;
 
 export const getUrlByRoute = (route: RouteNames, withFirstSlash?: boolean): string => {
   return `${withFirstSlash ? '/' : ''}${SITE_PATHS[route]}`;
@@ -24,6 +24,36 @@ export function getRouteByUrlOrNotFoundRoute(url: string, notFoundRoteByDefault 
   }
 
   return routeName?.[0];
+}
+
+export class Route {
+  private _block: Block | null = null;
+
+  constructor(
+    private _pathname: string,
+    private blockClass: AnyBlockComponents,
+    private props: Record<any, any> = {},
+  ) {}
+
+  public leave() {
+    this._block?.emitComponentWillUnmount();
+    this._block = null;
+  }
+
+  public getBlock() {
+    return this._block;
+  }
+
+  public match(pathname: string) {
+    return isEqual(pathname, this._pathname);
+  }
+
+  public render() {
+    if (!this._block) {
+      this._block = new this.blockClass(this.props);
+      renderDOM(this._block);
+    }
+  }
 }
 
 export class Router {
@@ -102,7 +132,9 @@ export class Router {
 
     if (!route) {
       if (!this._notFoundRoute) {
-        throw new Error(`Route ${pathname} not found and defaultRoute not configured`);
+        throw new Error(
+          `Route ${pathname} not found and _notFoundRoute not configured. Use .useAsNotFoundRoute() to set notFoundPage`,
+        );
       }
       route = this._notFoundRoute;
     }

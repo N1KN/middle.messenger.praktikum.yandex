@@ -1,12 +1,11 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { LinkButton } from 'components/link-button';
 import { Block } from 'lib/block';
-import { getUrlByRoute } from 'utils/router';
+import { getUrlByRoute } from 'lib/router';
 
 export class SiteMap extends Block {
   protected init() {
-    this.children = {
-      ...this.children,
+    this.setChildren({
       pageItems: [
         new LinkButton({ url: getUrlByRoute(RouteNames.SIGN_IN), text: 'Страница входа' }),
         new LinkButton({ url: getUrlByRoute(RouteNames.SIGN_UP), text: 'Страница авторизации' }),
@@ -23,7 +22,7 @@ export class SiteMap extends Block {
           text: 'Страница 500',
         }),
       ],
-    };
+    });
   }
   render() {
     const template = `

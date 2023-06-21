@@ -1,17 +1,15 @@
-import { RouteNames } from 'constants/router';
+import { RouteNames } from 'app-constants/router';
 import { Button } from 'components/button';
 import { PageWrapperWithBackButton } from 'components/page-wrapper-with-back-button';
 import { TextField } from 'components/text-field';
 import { UserControllerInstance } from 'controllers/user-controller';
 import { Block } from 'lib/block';
 import { FormHandler } from 'lib/form-validator';
+import { getUrlByRoute } from 'lib/router';
 import { cn } from 'utils/bem';
-import { getUrlByRoute } from 'utils/router';
 import { createTextValidator, validateMaxLength, validateMinLength, validatePassword } from 'utils/validators';
 
 import './styles.pcss';
-
-const avatarUrl = new URL('/src/static/img/avatar.svg', import.meta.url);
 
 const cnChangePassword = cn('ChangePassword');
 const accountEditLink = getUrlByRoute(RouteNames.ACCOUNT);
@@ -55,13 +53,6 @@ export class ChangePassword extends Block {
   render() {
     const template = `
         <form class="${cnChangePassword()}">
-            <!--div class="${cnChangePassword('headerContent')}">
-                <div class="${cnChangePassword('changeAvatar')}">
-                    <img src="${avatarUrl}" alt="Аватар по умолчанию" />
-                    <div class="${cnChangePassword('changeAvatarText')}">Поменять аватар</div>
-                </div>
-            </div-->
-
             <div class="${cnChangePassword('bodyContent')}">
                 {{{oldPassword}}}
                 {{{newPassword}}}

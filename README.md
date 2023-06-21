@@ -7,6 +7,7 @@
   * Netlify: [Ссылка для ветки deploy](https://monumental-mochi-0d05b9.netlify.app/)
   * Netlify: [Ссылка для ветки sprint_2](https://vocal-caramel-a649ff.netlify.app/)
   * Netlify: [Ссылка для ветки sprint_3](https://storied-horse-795083.netlify.app/)
+  * Netlify: [Ссылка для ветки sprint_3](https://hilarious-banoffee-e6731a.netlify.app/)
 
 ---
 
@@ -63,3 +64,4 @@ https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/4
 ### Спринт №4
 
 *В ПРОЦЕССЕ*
+https://github.com/N1KN/middle.messenger.praktikum.yandex/pull/5

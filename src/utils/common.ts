@@ -1,10 +1,9 @@
+import { APP_URLS, MESSAGE_MONTHS } from 'app-constants';
+
 /*
 Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
 https://eslint.org/docs/latest/rules/no-prototype-builtins
 */
-
-import { APP_URLS, MESSAGE_MONTHS } from 'constants';
-
 export const hasOwnProperty: (object: unknown, key: PropertyKey) => boolean = Function.prototype.call.bind(
   Object.prototype.hasOwnProperty,
 );
@@ -121,114 +120,6 @@ export const isEqual = (a: any, b: any): boolean => {
   return true;
 };
 
-export const trim = (string: string, chars?: string): string => {
-  const str = ' ' + string + ' ';
-
-  if (str && chars === undefined) {
-    return string.trim();
-  }
-
-  if (!str || !chars) {
-    return string || '';
-  }
-
-  const regFirst = new RegExp(` ${chars}`, 'gi');
-  const regSecond = new RegExp(`${chars} `, 'gi');
-
-  return str.replace(regFirst, '').replace(regSecond, '').trim();
-};
-
-function merge(lhs: Record<string, any>, rhs: Record<string, any>): Record<string, any> {
-  for (const p in rhs) {
-    if (!hasOwnProperty(rhs, p)) {
-      continue;
-    }
-
-    try {
-      if (rhs[p].constructor === Object) {
-        rhs[p] = merge(lhs[p] as Record<string, any>, rhs[p] as Record<string, any>);
-      } else {
-        lhs[p] = rhs[p];
-      }
-    } catch (e) {
-      lhs[p] = rhs[p];
-    }
-  }
-
-  return lhs;
-}
-
-export function set(
-  object: Record<string, any> | unknown,
-  path: string,
-  value: unknown,
-): Record<string, any> | unknown {
-  if (typeof object !== 'object' || object === null) {
-    return object;
-  }
-
-  const result = path.split('.').reduceRight<Record<string, any>>(
-    (acc, key) => ({
-      [key]: acc,
-    }),
-    value as any,
-  );
-  return merge(object as Record<string, any>, result);
-}
-
-export function cloneDeep<T extends object = object>(obj: T) {
-  const objectTypeGuard = (value: any): value is Record<PropertyKey, any> =>
-    typeof value === 'object' && value instanceof Object;
-
-  return (function _cloneDeep(item: T): T | Date | Set<unknown> | Map<unknown, unknown> | object | T[] {
-    if (item === null || typeof item !== 'object') {
-      return item;
-    }
-
-    if (item instanceof Date) {
-      return new Date(item.valueOf());
-    }
-
-    if (item instanceof Array) {
-      const copy: any[] = [];
-
-      item.forEach((_, i) => (copy[i] = _cloneDeep(item[i])));
-
-      return copy;
-    }
-
-    if (item instanceof Set) {
-      const copy = new Set();
-
-      item.forEach((v) => copy.add(_cloneDeep(v)));
-
-      return copy;
-    }
-
-    if (item instanceof Map) {
-      const copy = new Map();
-
-      item.forEach((v, k) => copy.set(k, _cloneDeep(v)));
-
-      return copy;
-    }
-
-    if (objectTypeGuard(item)) {
-      const copy: Record<PropertyKey, any> = {};
-
-      // TODO: Разобраться, как тут использовать type-guard
-      // @ts-ignore
-      Object.getOwnPropertySymbols(item).forEach((s) => (copy[s] = _cloneDeep(item[s])));
-      // @ts-ignore
-      Object.keys(item).forEach((k) => (copy[k] = _cloneDeep(item[k])));
-
-      return copy;
-    }
-
-    throw new Error(`Unable to copy object: ${item}`);
-  })(obj);
-}
-
 type StringIndexed = Record<string, any>;
 
 export const queryStringify = (data: StringIndexed): string | never => {
@@ -268,3 +159,11 @@ export const queryStringify = (data: StringIndexed): string | never => {
     return `${result}${key}=${value}${endLine}`;
   }, '');
 };
+
+export function debounce<T extends any[]>(func: (...args: T) => void, delay: number) {
+  let timeoutID: ReturnType<typeof setTimeout>;
+  return function (this: ThisParameterType<typeof func>, ...args: T) {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => func.apply(this, args), delay);
+  };
+}
